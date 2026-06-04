@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   /* Fonts loaded via <link> below; this block is the design system */
 
@@ -2063,6 +2064,63 @@
     #screen-about .principle .pnum { font-size: 38px; }
   }
 
+  /* Auth screen */
+  .auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--hairline);
+    margin: 32px 0;
+  }
+  .auth-tab {
+    padding: 10px 22px 12px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-mute);
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .auth-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+  .auth-error {
+    font-size: 13px;
+    color: var(--danger);
+    padding: 10px 14px;
+    background: var(--danger-wash);
+    margin-bottom: 18px;
+  }
+  .auth-success {
+    font-size: 13px;
+    color: var(--ok);
+    padding: 10px 14px;
+    background: var(--ok-wash);
+    margin-bottom: 18px;
+  }
+  .topbar-user {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .topbar-signout {
+    font-size: 11px;
+    color: var(--ink-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--sans);
+    padding: 2px 0;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .topbar-signout:hover { color: var(--ink); }
+
   /* Demo CTA */
   .demo-cta {
     margin-top: 28px;
@@ -2133,11 +2191,13 @@
   </a>
   <nav class="topbar-nav" id="topbarNav">
     <a onclick="showScreen('landing')" id="nav-landing">Home</a>
-    <a onclick="showScreen('setup')" id="nav-setup">Setup</a>
+    <a onclick="openLeadPath()" id="nav-setup">Setup</a>
     <a onclick="showScreen('about')" id="nav-about">About</a>
   </nav>
   <div class="topbar-right" id="topbarMeta">
-    <span class="topbar-meta">v.0.3 · <strong>prototype</strong></span>
+    <span class="topbar-meta" id="topbarVersion">v.0.3 · <strong>prototype</strong></span>
+    <span class="topbar-user hidden" id="topbarUser"></span>
+    <button class="topbar-signout hidden" id="topbarSignout" onclick="handleSignOut()">Sign out</button>
   </div>
   <!-- Interview-specific right side (hidden by default) -->
   <div class="topbar-right hidden" id="topbarInterview">
@@ -2168,7 +2228,7 @@
     </div>
 
     <div class="welcome-cards">
-      <a class="welcome-card" onclick="showScreen('setup')">
+      <a class="welcome-card" onclick="openLeadPath()">
         <span class="wc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><path d="M3 19c0-3.1 2.5-5.3 5.5-5.3S14 15.9 14 19"/><circle cx="17" cy="7" r="2.3"/><path d="M16.2 13.1c2.7-.2 4.8 1.7 4.8 4.6"/></svg></span>
         <h3>For team leads</h3>
         <p>Add your team, watch the shared picture build as people respond, then run the workshop that turns it into an agreement.</p>
@@ -2193,6 +2253,57 @@
     </div>
 
     <p class="landing-note">This process works best for teams of seven or more. Smaller teams may find a facilitated conversation more effective than a structured interview.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: AUTH (TEAM LEAD SIGN IN / SIGN UP) -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-auth">
+  <div class="page-container" style="max-width:480px;">
+    <div class="page-label">Team lead access</div>
+    <h1 class="page-title">Your dashboard.</h1>
+    <p class="page-subtitle">Sign in to manage your team's setup and see their results. Or create an account to get started.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="signin" onclick="switchAuthTab('signin')">Sign in</button>
+      <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Create account</button>
+    </div>
+
+    <!-- Sign in -->
+    <div id="authSignin">
+      <div class="form-field">
+        <label class="form-label" for="authEmail">Email</label>
+        <input type="email" id="authEmail" class="form-input" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="authPassword">Password</label>
+        <input type="password" id="authPassword" class="form-input" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="auth-error hidden" id="signinError"></div>
+      <div class="actions-bar">
+        <button class="btn-text" onclick="showScreen('landing')">← Back</button>
+        <button class="btn-primary" onclick="handleSignIn()">Sign in <span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <!-- Sign up -->
+    <div id="authSignup" class="hidden">
+      <div class="form-field">
+        <label class="form-label" for="authSignupEmail">Email</label>
+        <input type="email" id="authSignupEmail" class="form-input" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="authSignupPassword">Password</label>
+        <input type="password" id="authSignupPassword" class="form-input" placeholder="Minimum 8 characters" autocomplete="new-password">
+      </div>
+      <div class="auth-error hidden" id="signupError"></div>
+      <div class="auth-success hidden" id="signupSuccess"></div>
+      <div class="actions-bar">
+        <button class="btn-text" onclick="showScreen('landing')">← Back</button>
+        <button class="btn-primary" onclick="handleSignUp()">Create account <span class="arr">→</span></button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3618,6 +3729,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildTweaksPanel();
   applyTweaks();
   initReveal();
+  initAuth();
 });
 
 // ============================================================
@@ -3637,6 +3749,114 @@ function initReveal() {
   setTimeout(revealCheck, 80);
   setTimeout(revealCheck, 350);
 }
+
+// ============================================================
+// SUPABASE CLIENT
+// ============================================================
+
+const _supa = window.supabase.createClient(
+  'https://xtawmnltlvfjtlkpjpys.supabase.co',
+  'sb_publishable_DktgbHRJ7bNmtm8-iFXasA_mPy4wh2E'
+);
+
+let currentUser = null;
+
+async function initAuth() {
+  const { data: { session } } = await _supa.auth.getSession();
+  currentUser = session?.user ?? null;
+  updateAuthUI();
+  _supa.auth.onAuthStateChange((_event, session) => {
+    currentUser = session?.user ?? null;
+    updateAuthUI();
+  });
+}
+
+function updateAuthUI() {
+  const userEl    = document.getElementById('topbarUser');
+  const signoutEl = document.getElementById('topbarSignout');
+  const versionEl = document.getElementById('topbarVersion');
+  if (currentUser) {
+    userEl.textContent = currentUser.email;
+    userEl.classList.remove('hidden');
+    signoutEl.classList.remove('hidden');
+    versionEl.classList.add('hidden');
+  } else {
+    userEl.classList.add('hidden');
+    signoutEl.classList.add('hidden');
+    versionEl.classList.remove('hidden');
+  }
+}
+
+function openLeadPath() {
+  if (currentUser) {
+    showScreen('setup');
+  } else {
+    showScreen('auth');
+  }
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === tab)
+  );
+  document.getElementById('authSignin').classList.toggle('hidden', tab !== 'signin');
+  document.getElementById('authSignup').classList.toggle('hidden', tab !== 'signup');
+}
+
+async function handleSignIn() {
+  const email    = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errorEl  = document.getElementById('signinError');
+  errorEl.classList.add('hidden');
+  if (!email || !password) {
+    errorEl.textContent = 'Please enter your email and password.';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  const { error } = await _supa.auth.signInWithPassword({ email, password });
+  if (error) {
+    errorEl.textContent = error.message;
+    errorEl.classList.remove('hidden');
+  } else {
+    showScreen('setup');
+  }
+}
+
+async function handleSignUp() {
+  const email    = document.getElementById('authSignupEmail').value.trim();
+  const password = document.getElementById('authSignupPassword').value;
+  const errorEl  = document.getElementById('signupError');
+  const successEl = document.getElementById('signupSuccess');
+  errorEl.classList.add('hidden');
+  successEl.classList.add('hidden');
+  if (!email || !password) {
+    errorEl.textContent = 'Please enter your email and password.';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  if (password.length < 8) {
+    errorEl.textContent = 'Password must be at least 8 characters.';
+    errorEl.classList.remove('hidden');
+    return;
+  }
+  const { data, error } = await _supa.auth.signUp({ email, password });
+  if (error) {
+    errorEl.textContent = error.message;
+    errorEl.classList.remove('hidden');
+  } else if (data.session) {
+    // Email confirmation disabled — signed in immediately
+    showScreen('setup');
+  } else {
+    successEl.textContent = 'Account created — check your email to confirm, then sign in.';
+    successEl.classList.remove('hidden');
+  }
+}
+
+async function handleSignOut() {
+  await _supa.auth.signOut();
+  showScreen('landing');
+}
+
 
 // ============================================================
 // DEMO MODE — synthetic team data for Coastal Agency

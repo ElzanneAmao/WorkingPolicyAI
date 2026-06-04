@@ -1,0 +1,3485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkingPolicy.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=Geist:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Fonts loaded via <link> below; this block is the design system */
+
+  :root {
+    /* Palette: Sage (default) */
+    --paper:        oklch(97.5% 0.008 95);
+    --paper-deep:   oklch(95% 0.012 90);
+    --ink:          oklch(22% 0.015 240);
+    --ink-soft:     oklch(38% 0.015 240);
+    --ink-mute:     oklch(56% 0.012 240);
+    --ink-faint:    oklch(72% 0.01 240);
+    --rule:         oklch(88% 0.012 240);
+    --rule-soft:    oklch(93% 0.008 240);
+    --accent:       oklch(48% 0.07 165);
+    --accent-soft:  oklch(60% 0.05 165);
+    --accent-wash:  oklch(94% 0.022 165);
+    --warn:         oklch(55% 0.09 65);
+    --warn-wash:    oklch(95% 0.025 75);
+    --danger:       oklch(52% 0.13 25);
+    --danger-wash:  oklch(95% 0.025 25);
+    --ok:           oklch(50% 0.08 155);
+    --ok-wash:      oklch(94% 0.03 155);
+    --info:         oklch(50% 0.07 245);
+    --info-wash:    oklch(94% 0.02 245);
+
+    /* Typography */
+    --serif: "Newsreader", "Source Serif 4", Georgia, serif;
+    --sans: "Geist", "Söhne", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+
+    /* Density (Comfortable default) */
+    --space-unit: 8px;
+    --page-pad-y: 72px;
+    --page-pad-x: 24px;
+    --content-max: 680px;
+    --chat-max: 620px;
+    --bar-pad-y: 18px;
+    --bar-pad-x: 40px;
+
+    /* Type sizing */
+    --display-size: clamp(36px, 4.4vw, 56px);
+    --display-line: 1.06;
+    --h1-size: clamp(30px, 3.4vw, 40px);
+    --h2-size: 22px;
+    --body-size: 16px;
+    --small-size: 13px;
+    --label-size: 11px;
+    --label-tracking: 0.16em;
+
+    --radius: 4px;
+  }
+
+  /* Density variants */
+  [data-density="cozy"] {
+    --page-pad-y: 48px;
+    --bar-pad-y: 14px;
+    --body-size: 15px;
+    --display-size: clamp(30px, 3.6vw, 44px);
+  }
+  [data-density="spacious"] {
+    --page-pad-y: 104px;
+    --bar-pad-y: 26px;
+    --body-size: 17px;
+    --display-size: clamp(40px, 5.2vw, 68px);
+  }
+
+  /* Palettes */
+  [data-palette="slate"] {
+    --paper: oklch(97% 0.005 240);
+    --paper-deep: oklch(94% 0.008 240);
+    --ink: oklch(20% 0.018 245);
+    --ink-soft: oklch(36% 0.015 245);
+    --ink-mute: oklch(54% 0.012 245);
+    --ink-faint: oklch(70% 0.01 245);
+    --rule: oklch(88% 0.01 240);
+    --rule-soft: oklch(93% 0.007 240);
+    --accent: oklch(48% 0.085 245);
+    --accent-soft: oklch(60% 0.06 245);
+    --accent-wash: oklch(94% 0.025 245);
+  }
+  [data-palette="oxblood"] {
+    --paper: oklch(96% 0.012 70);
+    --paper-deep: oklch(93% 0.018 65);
+    --ink: oklch(20% 0.02 25);
+    --ink-soft: oklch(36% 0.018 25);
+    --ink-mute: oklch(54% 0.014 25);
+    --ink-faint: oklch(72% 0.012 25);
+    --rule: oklch(86% 0.018 35);
+    --rule-soft: oklch(92% 0.014 40);
+    --accent: oklch(38% 0.11 20);
+    --accent-soft: oklch(52% 0.09 20);
+    --accent-wash: oklch(93% 0.028 30);
+  }
+  [data-palette="terracotta"] {
+    --paper: oklch(98% 0.008 75);
+    --paper-deep: oklch(95.5% 0.014 70);
+    --ink: oklch(25% 0.012 50);
+    --ink-soft: oklch(42% 0.012 50);
+    --ink-mute: oklch(58% 0.01 50);
+    --ink-faint: oklch(74% 0.008 50);
+    --rule: oklch(88% 0.014 60);
+    --rule-soft: oklch(93% 0.01 60);
+    --accent: oklch(58% 0.13 45);
+    --accent-soft: oklch(68% 0.1 45);
+    --accent-wash: oklch(95% 0.03 60);
+  }
+
+  /* Dark mode */
+  [data-theme="dark"] {
+    --paper: oklch(18% 0.015 240);
+    --paper-deep: oklch(22% 0.015 240);
+    --ink: oklch(95% 0.008 95);
+    --ink-soft: oklch(80% 0.012 95);
+    --ink-mute: oklch(64% 0.01 240);
+    --ink-faint: oklch(48% 0.01 240);
+    --rule: oklch(30% 0.018 240);
+    --rule-soft: oklch(25% 0.015 240);
+    --accent: oklch(72% 0.09 160);
+    --accent-soft: oklch(64% 0.07 160);
+    --accent-wash: oklch(28% 0.04 160);
+  }
+  [data-theme="dark"][data-palette="slate"] {
+    --accent: oklch(72% 0.1 245);
+    --accent-soft: oklch(64% 0.08 245);
+    --accent-wash: oklch(28% 0.04 245);
+  }
+  [data-theme="dark"][data-palette="oxblood"] {
+    --paper: oklch(18% 0.015 25);
+    --paper-deep: oklch(22% 0.018 25);
+    --accent: oklch(68% 0.12 25);
+    --accent-soft: oklch(58% 0.1 25);
+    --accent-wash: oklch(28% 0.06 25);
+  }
+  [data-theme="dark"][data-palette="terracotta"] {
+    --accent: oklch(72% 0.13 50);
+    --accent-soft: oklch(64% 0.1 50);
+    --accent-wash: oklch(28% 0.06 50);
+  }
+
+  /* Type pairing variants */
+  [data-type="plex"] {
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  [data-type="allsans"] {
+    --serif: "Geist", "Söhne", system-ui, sans-serif;
+    --sans: "Geist", "Söhne", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *::selection { background: var(--accent-wash); color: var(--ink); }
+
+  html, body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: var(--body-size);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01", "ss02", "cv11";
+  }
+
+  body {
+    min-height: 100vh;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  /* Notebook-paper feel: subtle horizontal rule pattern, very faint */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 31px,
+      color-mix(in oklch, var(--rule-soft) 60%, transparent) 31px,
+      color-mix(in oklch, var(--rule-soft) 60%, transparent) 32px
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 0;
+  }
+  body[data-rules="on"]::before { opacity: 0.55; }
+
+  /* ========== TYPOGRAPHY ========== */
+  .label, .mono {
+    font-family: var(--mono);
+    font-size: var(--label-size);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .label-accent { color: var(--accent); }
+
+  .serif {
+    font-family: var(--serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .display {
+    font-family: var(--serif);
+    font-size: var(--display-size);
+    line-height: var(--display-line);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .display em {
+    font-style: italic;
+    font-family: var(--serif);
+    color: var(--accent);
+  }
+
+  /* ========== TOP BAR ========== */
+  .topbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: var(--bar-pad-y) var(--bar-pad-x);
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topbar-logo .mark {
+    width: 18px; height: 18px;
+    display: inline-block;
+  }
+  .topbar-logo .name { font-weight: 500; }
+  .topbar-logo .name em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .topbar-nav {
+    display: flex;
+    gap: 28px;
+    justify-self: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+  .topbar-nav a {
+    color: var(--ink-mute);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 4px 0;
+    border-bottom: 1px solid transparent;
+  }
+  .topbar-nav a:hover { color: var(--ink); }
+  .topbar-nav a.active {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+  .topbar-right {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .topbar-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .topbar-meta strong { color: var(--ink); font-weight: 500; }
+
+  .topbar-right.hidden { display: none; }
+  .topbar-theme {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .topbar-progress-wrap { display: flex; align-items: center; gap: 10px; }
+  .topbar-progress-bar {
+    width: 120px;
+    height: 2px;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  .topbar-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .topbar-progress-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+
+  /* ========== SCREEN BASE ========== */
+  .screen { display: none; position: relative; z-index: 1; }
+  .screen.active { display: block; }
+
+  .page-container {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: var(--page-pad-y) var(--page-pad-x) 80px;
+    position: relative;
+  }
+  .page-label {
+    font-family: var(--mono);
+    font-size: var(--label-size);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .page-label::before {
+    content: "";
+    width: 16px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .page-title {
+    font-family: var(--serif);
+    font-size: var(--h1-size);
+    font-weight: 400;
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .page-title em { font-style: italic; color: var(--accent); }
+  .page-subtitle {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 48px;
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+  .section-heading {
+    font-family: var(--serif);
+    font-size: var(--h2-size);
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.015em;
+  }
+  .section-desc {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin-bottom: 22px;
+  }
+  .body-text {
+    font-size: var(--body-size);
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+    text-wrap: pretty;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 56px 0;
+    position: relative;
+  }
+  .divider.with-glyph::before {
+    content: "❋";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 14px;
+    font-size: 14px;
+    color: var(--ink-faint);
+  }
+
+  /* ========== BUTTONS ========== */
+  .btn-primary, .btn-secondary, .btn-text {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s;
+    border-radius: var(--radius);
+  }
+  .btn-primary {
+    padding: 13px 24px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn-secondary {
+    padding: 13px 24px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-secondary:hover { border-color: var(--ink); }
+  .btn-text {
+    padding: 6px 0;
+    border: none;
+    background: none;
+    color: var(--ink-mute);
+  }
+  .btn-text:hover { color: var(--ink); }
+  .btn-primary .arr, .btn-secondary .arr {
+    font-family: var(--mono);
+    transition: transform 0.15s;
+  }
+  .btn-primary:hover .arr, .btn-secondary:hover .arr { transform: translateX(3px); }
+
+  /* ========== LANDING ========== */
+  .landing-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+  }
+  .landing-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 64px;
+  }
+  .landing-meta .left { color: var(--accent); }
+  .landing-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 80px;
+    max-width: 920px;
+  }
+  .landing-hero h1 {
+    font-family: var(--serif);
+    font-size: var(--display-size);
+    line-height: var(--display-line);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    margin-bottom: 32px;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+  .landing-hero h1 em { font-style: italic; color: var(--accent); }
+  .landing-hero .lede {
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    text-wrap: pretty;
+  }
+
+  /* Landing cards variant: three cards */
+  .landing-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .landing-card {
+    padding: 36px 28px 32px;
+    border-right: 1px solid var(--rule);
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    position: relative;
+  }
+  .landing-card:last-child { border-right: none; }
+  .landing-card:hover { background: var(--accent-wash); }
+  .landing-card .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+    letter-spacing: 0.06em;
+  }
+  .landing-card .icon {
+    width: 36px; height: 36px;
+    margin-bottom: 20px;
+    color: var(--accent);
+  }
+  .landing-card h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  .landing-card p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .landing-card .go {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.15s;
+  }
+  .landing-card:hover .go { gap: 10px; }
+
+  /* Landing variant: index list */
+  .landing-index {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .landing-index .row {
+    display: grid;
+    grid-template-columns: 60px 1fr 200px 90px;
+    align-items: center;
+    padding: 28px 4px;
+    border-bottom: 1px solid var(--rule-soft);
+    cursor: pointer;
+    transition: padding-left 0.18s, background 0.18s;
+    gap: 24px;
+  }
+  .landing-index .row:last-child { border-bottom: none; }
+  .landing-index .row:hover { padding-left: 16px; background: var(--accent-wash); }
+  .landing-index .row .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .landing-index .row h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  .landing-index .row p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+  .landing-index .row .arrow {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    text-align: right;
+    transition: transform 0.18s;
+  }
+  .landing-index .row:hover .arrow { transform: translateX(6px); }
+
+  /* Landing variant: manifesto */
+  .landing-manifesto {
+    border-top: 1px solid var(--rule);
+    padding-top: 56px;
+  }
+  .landing-manifesto .principle {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 24px 0;
+    align-items: baseline;
+  }
+  .landing-manifesto .principle .pnum {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .landing-manifesto .principle .ptext {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .landing-manifesto .principle em { color: var(--accent); font-style: italic; }
+  .landing-manifesto .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .landing-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    text-align: center;
+    margin-top: 56px;
+    max-width: 60ch;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.7;
+    text-transform: uppercase;
+  }
+
+  /* ========== CONSENT ========== */
+  .consent-section {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .consent-section:first-of-type { padding-top: 0; }
+  .consent-section h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .consent-section h3::before {
+    content: counter(consent-step, decimal-leading-zero);
+    counter-increment: consent-step;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  #screen-consent .page-container { counter-reset: consent-step; }
+  .consent-section .body-text { font-size: 15px; }
+  .consent-detail {
+    margin-top: 14px;
+    padding: 16px 20px;
+    background: var(--accent-wash);
+    border-left: 2px solid var(--accent);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .consent-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    align-items: center;
+  }
+
+  /* ========== SETUP / FORMS ========== */
+  .form-field {
+    margin-bottom: 28px;
+    display: block;
+  }
+  .form-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: var(--label-size);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+  }
+  .form-input, .add-role-input {
+    font-family: var(--sans);
+    font-size: 16px;
+    padding: 12px 0;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .add-role-input:focus { border-bottom-color: var(--accent); }
+  .form-input::placeholder, .add-role-input::placeholder { color: var(--ink-faint); }
+
+  .role-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .role-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: padding-left 0.15s;
+  }
+  .role-item:hover { padding-left: 8px; }
+  .role-name-input {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--ink);
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    letter-spacing: -0.01em;
+  }
+  .role-count-input {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 4px 8px;
+    width: 52px;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .role-count-input::-webkit-inner-spin-button,
+  .role-count-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .role-count-input:focus { border-color: var(--accent); }
+  .role-right { display: flex; align-items: center; gap: 16px; }
+  .role-count {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+  .role-remove {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.15s;
+  }
+  .role-remove:hover { color: var(--danger); }
+  .add-role-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    padding-top: 8px;
+  }
+  .add-role-row .add-role-input { padding: 8px 0; }
+
+  /* Info / warning boxes */
+  .info-box, .warning-box {
+    margin-top: 24px;
+    padding: 18px 22px;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-wash);
+  }
+  .warning-box {
+    border-left-color: var(--warn);
+    background: var(--warn-wash);
+  }
+  .info-box-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .warning-box .info-box-heading { color: var(--warn); }
+  .info-box p, .warning-box p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .preview-box {
+    margin-top: 24px;
+    padding: 28px;
+    border: 1px solid var(--rule);
+    background: var(--paper-deep);
+    position: relative;
+  }
+  .preview-box::before {
+    content: "Team-member view";
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .preview-question {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 18px;
+    letter-spacing: -0.015em;
+  }
+  .preview-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .preview-btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 8px 14px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    cursor: default;
+  }
+
+  .actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ========== INTERVIEW / CHAT ========== */
+  .chat-container {
+    overflow-y: auto;
+    padding: 56px 24px 160px;
+    min-height: calc(100vh - 60px);
+  }
+  .chat-thread {
+    max-width: var(--chat-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .msg {
+    max-width: 100%;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: msgIn 0.35s ease forwards;
+  }
+  .msg.no-anim { opacity: 1; transform: none; animation: none; }
+  .msg-tool {
+    margin-top: 36px;
+    margin-bottom: 6px;
+    padding-left: 28px;
+    position: relative;
+  }
+  .msg-tool::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 14px;
+    width: 16px; height: 1px;
+    background: var(--accent);
+  }
+  .msg-tool:first-child { margin-top: 0; }
+  .msg-tool .msg-text {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+  }
+  .msg-context {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    padding-left: 28px;
+  }
+  .msg-context .msg-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .msg-user {
+    align-self: flex-end;
+    margin-top: 22px;
+    margin-bottom: 6px;
+    max-width: 78%;
+  }
+  .msg-user .msg-bubble {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 18px;
+    border-radius: 2px;
+    font-size: 15px;
+    line-height: 1.5;
+    display: inline-block;
+    text-align: left;
+  }
+  .msg-transition {
+    margin-top: 36px;
+    margin-bottom: 12px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .msg-transition .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+  .msg-transition .msg-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+  @keyframes msgIn { to { opacity: 1; transform: translateY(0); } }
+
+  .picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    padding-left: 28px;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: msgIn 0.35s ease 0.15s forwards;
+  }
+  .picker.no-anim { opacity: 1; transform: none; animation: none; }
+  .picker-btn {
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 10px 16px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+    border-radius: 2px;
+    text-align: left;
+  }
+  .picker-btn:hover {
+    border-color: var(--ink);
+    background: var(--paper-deep);
+  }
+  .picker-btn.selected {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+    pointer-events: none;
+  }
+  .picker-btn.faded { opacity: 0.35; pointer-events: none; }
+  .picker.multi-select .picker-btn.selected { pointer-events: auto; }
+  .picker.multi-select .picker-btn.selected:hover {
+    background: var(--ink-soft);
+    border-color: var(--ink-soft);
+  }
+  .confirm-btn {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 22px;
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    border-radius: 2px;
+    display: none;
+    margin-top: 12px;
+    margin-left: 28px;
+    transition: all 0.15s;
+  }
+  .confirm-btn.visible { display: inline-block; }
+  .confirm-btn:hover { background: var(--ink); border-color: var(--ink); }
+  .other-input-wrap {
+    display: none;
+    margin-top: 10px;
+    margin-left: 28px;
+    width: calc(100% - 28px);
+  }
+  .other-input-wrap.visible { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .other-input {
+    flex: 1;
+    min-width: 200px;
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    border-radius: 2px;
+  }
+  .other-input:focus { border-color: var(--accent); }
+  .other-input::placeholder { color: var(--ink-faint); }
+  .other-input-hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  .back-answer-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 0 8px 28px;
+    margin-top: 6px;
+    transition: color 0.15s;
+    text-align: left;
+  }
+  .back-answer-btn:hover { color: var(--accent); }
+
+  /* Role select */
+  .role-select-screen {
+    max-width: var(--chat-max);
+    margin: 0 auto;
+    padding-top: 40px;
+  }
+  .role-select-screen .label {
+    margin-bottom: 16px;
+  }
+  .role-select-screen h2 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .role-select-screen p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid var(--rule);
+  }
+  .role-card {
+    padding: 18px 20px 18px 8px;
+    border-bottom: 1px solid var(--rule-soft);
+    cursor: pointer;
+    transition: padding-left 0.15s, background 0.15s;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .role-card::after {
+    content: "→";
+    font-family: var(--mono);
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .role-card:hover {
+    padding-left: 20px;
+    background: var(--accent-wash);
+  }
+  .role-card:hover::after { opacity: 1; transform: translateX(4px); }
+  .role-card.selected {
+    background: var(--ink);
+    color: var(--paper);
+    padding-left: 20px;
+  }
+  .role-card.selected::after { color: var(--paper); opacity: 1; }
+
+  /* ========== SUMMARY ========== */
+  .summary-screen {
+    max-width: var(--chat-max);
+    margin: 0 auto;
+    padding-top: 20px;
+    display: none;
+  }
+  .summary-screen .label { margin-bottom: 16px; }
+  .summary-screen h2 {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .summary-screen > p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+    line-height: 1.6;
+    max-width: 56ch;
+  }
+  .summary-card {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 18px;
+    align-items: baseline;
+  }
+  .summary-card .scnum {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .summary-card h3 {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    letter-spacing: -0.015em;
+  }
+  .summary-card p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .summary-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+  }
+  .tag-green { color: var(--ok); background: var(--ok-wash); }
+  .tag-amber { color: var(--warn); background: var(--warn-wash); }
+  .tag-red { color: var(--danger); background: var(--danger-wash); }
+  .tag-blue { color: var(--info); background: var(--info-wash); }
+
+  .summary-closing {
+    margin-top: 36px;
+    padding: 24px 28px;
+    background: var(--accent-wash);
+    border-left: 2px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .summary-closing .sc-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .summary-closing p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  /* ========== DASHBOARD ========== */
+  .dashboard-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--page-pad-y) 40px 80px;
+  }
+  .dash-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dash-head .title-block { max-width: 60ch; }
+  .dash-stats {
+    display: flex;
+    gap: 32px;
+    font-family: var(--mono);
+  }
+  .dash-stat {
+    text-align: right;
+  }
+  .dash-stat .v {
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .dash-stat .v em { color: var(--accent); font-style: italic; }
+  .dash-stat .l {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+  .dash-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .dash-panel {
+    background: var(--paper);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .dash-panel .ph {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .dash-panel h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+  .dash-panel .ptag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+  .dash-panel .pdesc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    line-height: 1.55;
+  }
+  /* Bars chart */
+  .bars { display: flex; flex-direction: column; gap: 12px; }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 36px;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .bar-row .blabel { color: var(--ink); }
+  .bar-row .btrack {
+    height: 6px;
+    background: var(--rule-soft);
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-row .bfill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--accent);
+  }
+  .bar-row .bval {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+  /* Data tiers (heatmap-ish) */
+  .tier-list { display: flex; flex-direction: column; gap: 8px; }
+  .tier {
+    display: grid;
+    grid-template-columns: 24px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .tier:last-child { border-bottom: none; }
+  .tier .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .tier .dot.t-red { background: var(--danger); }
+  .tier .dot.t-amber { background: var(--warn); }
+  .tier .dot.t-green { background: var(--ok); }
+  .tier .tname { font-size: 13px; color: var(--ink); }
+  .tier .tcount {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
+  /* Quote pull */
+  .pull-quote {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--ink);
+    border-left: 2px solid var(--accent);
+    padding: 4px 0 4px 18px;
+    margin: 14px 0;
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .pull-quote + .pq-attr {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+  /* Concern list */
+  .concern-list { display: flex; flex-direction: column; }
+  .concern-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 50px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    gap: 8px;
+    font-size: 13px;
+  }
+  .concern-row:last-child { border-bottom: none; }
+  .concern-row .cdot {
+    height: 6px;
+    background: var(--rule-soft);
+    position: relative;
+  }
+  .concern-row .cdot::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    background: var(--accent);
+  }
+  .concern-row .cv {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+
+  /* ========== WORKSHOP ========== */
+  .workshop-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: var(--page-pad-y) 40px 80px;
+  }
+  .workshop-list {
+    margin-top: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .workshop-item {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 24px;
+    padding: 28px 8px 28px 8px;
+    border-bottom: 1px solid var(--rule);
+    align-items: center;
+    cursor: pointer;
+    transition: padding 0.15s, background 0.15s;
+  }
+  .workshop-item:hover { padding-left: 16px; background: var(--accent-wash); }
+  .workshop-item.is-active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .workshop-item.is-active .wi-num,
+  .workshop-item.is-active .wi-meta,
+  .workshop-item.is-active .wi-desc { color: var(--paper); opacity: 0.85; }
+  .wi-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+  .wi-icon {
+    width: 44px; height: 44px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .workshop-item.is-active .wi-icon { color: var(--accent-soft); }
+  .wi-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    margin-bottom: 4px;
+  }
+  .wi-desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .wi-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: var(--label-tracking);
+    color: var(--ink-mute);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .wi-meta .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid currentColor;
+    margin-bottom: 6px;
+  }
+  .wi-meta .badge.b-active {
+    color: var(--accent);
+    background: var(--accent-wash);
+    border-color: var(--accent);
+  }
+
+  /* ========== OUTPUTS ========== */
+  .outputs-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: var(--page-pad-y) 40px 80px;
+  }
+  .primary-output {
+    border: 1px solid var(--ink);
+    padding: 40px;
+    margin-top: 40px;
+    background: var(--paper);
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+  }
+  .primary-output::before {
+    content: "Primary output";
+    position: absolute;
+    top: -8px;
+    left: 24px;
+    background: var(--paper);
+    padding: 0 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .primary-output h3 {
+    font-family: var(--serif);
+    font-size: 30px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .primary-output p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .primary-output .doc-vis {
+    aspect-ratio: 3/4;
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .primary-output .doc-vis::before {
+    content: "";
+    height: 12px;
+    width: 60%;
+    background: var(--ink);
+  }
+  .primary-output .doc-vis::after {
+    content: "AI USE POLICY · v.1";
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+  }
+  .doc-vis .dl {
+    height: 3px;
+    background: var(--rule);
+  }
+  .doc-vis .dl.s { width: 70%; }
+  .doc-vis .dl.m { width: 90%; }
+  .doc-vis .dl.l { width: 100%; }
+
+  .outputs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 40px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .output-card {
+    background: var(--paper);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+  }
+  .output-card .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.06em;
+    margin-bottom: 18px;
+  }
+  .output-card h3 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+  }
+  .output-card p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .output-card .down {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 16px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+  }
+
+  /* ========== ABOUT ========== */
+  .about-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--page-pad-y) 24px 80px;
+  }
+  .about-lede {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 40px;
+    text-wrap: pretty;
+    letter-spacing: -0.015em;
+  }
+  .about-lede strong { color: var(--accent); font-weight: 400; font-style: italic; }
+  .about-lede sup a { color: var(--accent); text-decoration: none; }
+  .principle {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 24px;
+    align-items: baseline;
+  }
+  .principle:last-of-type { border-bottom: none; }
+  .principle .pnum {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .principle h2 {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .principle p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .refs-block {
+    margin-top: 32px;
+    padding: 20px 22px;
+    background: var(--paper-deep);
+    border-left: 2px solid var(--rule);
+  }
+  .refs-block p {
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    letter-spacing: 0.01em;
+  }
+  .refs-block p strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--ink);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--label-tracking);
+  }
+  .refs-block a { color: var(--accent); text-decoration: none; }
+  .author-block {
+    margin-top: 40px;
+  }
+  .author-block p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 14px; }
+  .author-block a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-wash); }
+
+  /* ========== FOOTER ========== */
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 28px 40px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+  }
+  .site-footer .glyph { color: var(--accent); }
+  .interview-footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    padding: 14px 24px;
+    text-align: center;
+    z-index: 50;
+  }
+  .interview-footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    max-width: var(--chat-max);
+    margin: 0 auto;
+  }
+  .interview-footer a { color: var(--accent); text-decoration: none; }
+
+  /* Utilities */
+  .hidden { display: none !important; }
+  .fade-out { opacity: 0; transition: opacity 0.3s ease; }
+
+  /* SVG icon system */
+  .icon { display: inline-block; vertical-align: middle; }
+  .icon svg { width: 100%; height: 100%; display: block; }
+
+  /* ========== TWEAKS PANEL ========== */
+  .tweaks-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 18px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    transition: transform 0.18s;
+  }
+  .tweaks-toggle:hover { transform: rotate(45deg); }
+  .tweaks-panel {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    width: 320px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    z-index: 199;
+    padding: 22px;
+    display: none;
+  }
+  .tweaks-panel.open { display: block; }
+  .tweaks-panel h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tweaks-panel h4:not(:first-child) { margin-top: 20px; }
+  .tweaks-panel .tw-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .tweaks-panel .tw-sub {
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    line-height: 1.45;
+  }
+  .tw-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tw-chip {
+    font-family: var(--sans);
+    font-size: 12px;
+    padding: 7px 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .tw-chip:hover { border-color: var(--ink); }
+  .tw-chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tw-swatches {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .tw-swatch {
+    aspect-ratio: 1;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s;
+  }
+  .tw-swatch:hover { transform: scale(1.04); }
+  .tw-swatch.active { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .tw-swatch .a, .tw-swatch .b {
+    position: absolute;
+    inset: 0;
+  }
+  .tw-swatch .b {
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .tw-swatch .label {
+    position: absolute;
+    bottom: 4px; left: 4px;
+    font-family: var(--mono);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: white;
+    mix-blend-mode: difference;
+  }
+  .tw-close {
+    position: absolute;
+    top: 12px; right: 14px;
+    background: none;
+    border: none;
+    color: var(--ink-mute);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .tw-close:hover { color: var(--ink); }
+  .tweaks-panel .panel-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    margin-bottom: 4px;
+    letter-spacing: -0.015em;
+  }
+  .tweaks-panel .panel-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  /* ========== MEDIA ========== */
+  @media (max-width: 760px) {
+    .topbar { padding: 14px 16px; grid-template-columns: 1fr auto; }
+    .topbar-nav { display: none; }
+    .landing-wrap { padding: 48px 20px; }
+    .landing-cards { grid-template-columns: 1fr; }
+    .landing-card { border-right: none; border-bottom: 1px solid var(--rule); }
+    .landing-card:last-child { border-bottom: none; }
+    .landing-index .row { grid-template-columns: 40px 1fr 40px; }
+    .landing-index .row p { display: none; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .outputs-grid { grid-template-columns: 1fr; }
+    .primary-output { grid-template-columns: 1fr; padding: 28px; }
+    .primary-output .doc-vis { max-width: 140px; }
+    .site-footer { flex-direction: column; gap: 8px; }
+    .dash-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>
+</head>
+<body data-rules="off">
+
+<!-- ============================================================ -->
+<!-- TOP BAR -->
+<!-- ============================================================ -->
+<div class="topbar" id="topbar">
+  <a class="topbar-logo" onclick="showScreen('landing')">
+    <span class="mark icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 3 H15 L19 7 V21 H5 Z"/><path d="M15 3 V7 H19"/><path d="M8 11 H16 M8 14 H16 M8 17 H13"/></svg></span>
+    <span class="name">Working<em>Policy</em>.AI</span>
+  </a>
+  <nav class="topbar-nav" id="topbarNav">
+    <a onclick="showScreen('landing')" id="nav-landing">Home</a>
+    <a onclick="showScreen('setup')" id="nav-setup">Setup</a>
+    <a onclick="showScreen('about')" id="nav-about">About</a>
+  </nav>
+  <div class="topbar-right" id="topbarMeta">
+    <span class="topbar-meta">v.0.3 · <strong>prototype</strong></span>
+  </div>
+  <!-- Interview-specific right side (hidden by default) -->
+  <div class="topbar-right hidden" id="topbarInterview">
+    <span class="topbar-theme" id="themeLabel"></span>
+    <div class="topbar-progress-wrap">
+      <div class="topbar-progress-bar">
+        <div class="topbar-progress-fill" id="progressFill"></div>
+      </div>
+      <span class="topbar-progress-text" id="progressText"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: LANDING -->
+<!-- ============================================================ -->
+<div class="screen active" id="screen-landing">
+  <div class="landing-wrap">
+    <div class="landing-meta">
+      <span class="left">— A working tool for small teams</span>
+      <span>Cape Town · Est. 2025</span>
+    </div>
+
+    <div class="landing-hero">
+      <h1 id="landingHeadline">Build a <em>shared agreement</em> about how your team uses AI.</h1>
+      <p class="lede" id="landingLede">A structured process for teams that have been using AI for a while but don't have a shared sense of how. Start with discovery, move to decisions, leave with something the team can live by.</p>
+    </div>
+
+    <!-- Variant A: three cards (default) -->
+    <div class="landing-cards landing-variant" data-variant="cards">
+      <a class="landing-card" onclick="showScreen('setup')">
+        <span class="num">01</span>
+        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="18" cy="12" r="4"/><circle cx="9" cy="24" r="3.5"/><circle cx="27" cy="24" r="3.5"/><path d="M18 16 V20 M11 22 L15.5 18 M25 22 L20.5 18"/></svg></span>
+        <h3>Organization setup</h3>
+        <p>Configure your team, review the dashboard, run the workshop.</p>
+        <span class="go">For team leads →</span>
+      </a>
+      <a class="landing-card" onclick="showScreen('consent')">
+        <span class="num">02</span>
+        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 30 V14 L18 6 L30 14 V30 Z"/><path d="M14 30 V20 H22 V30"/><circle cx="18" cy="14" r="0" fill="currentColor"/></svg></span>
+        <h3>Team member</h3>
+        <p>Take the interview. See your summary. Contribute to the team picture.</p>
+        <span class="go">For team members →</span>
+      </a>
+      <a class="landing-card" onclick="showScreen('about')">
+        <span class="num">03</span>
+        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="18" cy="18" r="13"/><path d="M18 12 V18 L23 21"/><circle cx="18" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></span>
+        <h3>About this tool</h3>
+        <p>The thinking behind this tool and who built it.</p>
+        <span class="go">Read more →</span>
+      </a>
+    </div>
+
+    <!-- Variant B: numbered index -->
+    <div class="landing-index landing-variant hidden" data-variant="index">
+      <div class="row" onclick="showScreen('setup')">
+        <span class="num">01</span>
+        <h3>Organization setup</h3>
+        <p>Configure your team, review the dashboard, run the workshop.</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row" onclick="showScreen('consent')">
+        <span class="num">02</span>
+        <h3>Team member interview</h3>
+        <p>Take the interview. See your summary. Contribute to the team picture.</p>
+        <span class="arrow">→</span>
+      </div>
+      <div class="row" onclick="showScreen('about')">
+        <span class="num">03</span>
+        <h3>About this tool</h3>
+        <p>The thinking behind this tool and who built it.</p>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+
+    <!-- Variant C: manifesto -->
+    <div class="landing-manifesto landing-variant hidden" data-variant="manifesto">
+      <div class="principle">
+        <span class="pnum">§ 01</span>
+        <p class="ptext"><em>Find out</em> what is happening before the policy gets written.</p>
+      </div>
+      <div class="principle">
+        <span class="pnum">§ 02</span>
+        <p class="ptext">Anonymity has limits, and the tool <em>says so</em>.</p>
+      </div>
+      <div class="principle">
+        <span class="pnum">§ 03</span>
+        <p class="ptext">The workshop has <em>opinions</em> — not defaults.</p>
+      </div>
+      <div class="principle">
+        <span class="pnum">§ 04</span>
+        <p class="ptext">The agreement is <em>meant to be revisited</em> every 90 days.</p>
+      </div>
+      <div class="actions">
+        <a class="btn-primary" onclick="showScreen('setup')">Start setup <span class="arr">→</span></a>
+        <a class="btn-secondary" onclick="showScreen('consent')">I'm a team member <span class="arr">→</span></a>
+        <a class="btn-text" onclick="showScreen('about')">Read the thinking</a>
+      </div>
+    </div>
+
+    <p class="landing-note">This process works best for teams of seven or more. Smaller teams may find a facilitated conversation more effective than a structured interview.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: CONSENT -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-consent">
+  <div class="page-container">
+    <div class="page-label">Before you start</div>
+    <h1 class="page-title">What you're agreeing to.</h1>
+    <p class="page-subtitle">This interview asks about how you use AI at work. Your answers help your team build a shared agreement. Before you begin, here's how your responses are handled.</p>
+
+    <div class="consent-section">
+      <h3>Your answers are aggregated, not shared individually.</h3>
+      <p class="body-text">Your team lead will see patterns across the team, grouped by role. They will not see your individual responses or be able to identify which answers are yours. Responses are combined with at least two other people in your role group before anything appears on the dashboard.</p>
+      <div class="consent-detail">With a team of this size, full anonymity is difficult to guarantee. If your role group has fewer than three people, your responses will be combined with a related group. This is an honest limitation, and it's the reason the tool requires a minimum of seven people.</div>
+    </div>
+
+    <div class="consent-section">
+      <h3>You're not identified — at all.</h3>
+      <p class="body-text">The interview doesn't ask for your name or email and doesn't link your responses to any account. The only people who log in to this tool are team leads, and only for setup and reporting. As a team member, you arrive via a shared link and leave no trace tied to you personally.</p>
+      <div class="consent-detail">A consequence of this: once you submit, your responses can't be edited or withdrawn, because there's no individual record to find. If you change your mind partway through, close the tab — partial responses are discarded.</div>
+    </div>
+
+    <div class="consent-section">
+      <h3>What's collected.</h3>
+      <p class="body-text">The interview covers six areas: which tools you use, how often, what data goes in, how you review AI output, what guidance you've received, and what concerns or gaps you see. Most questions use structured answers (you pick from options), with occasional free-text fields where a predefined list wouldn't capture your answer.</p>
+    </div>
+
+    <div class="consent-section">
+      <h3>How long it's kept.</h3>
+      <p class="body-text">Aggregated responses are retained so that future rounds can track how the team's practices change over time. If this process runs quarterly, the previous round's aggregate data is used as a comparison baseline. Individual answers are never stored on their own.</p>
+    </div>
+
+    <div class="consent-section">
+      <h3>What you can do.</h3>
+      <p class="body-text">You can stop the interview at any point and your partial responses will be discarded. After completing it, you'll see a personal summary of what you shared — that summary is shown to you in your browser and isn't sent anywhere separately. You can change any answer during the interview using the back button.</p>
+    </div>
+
+    <div class="consent-actions">
+      <button class="btn-primary" onclick="showScreen('interview')">I understand, begin the interview <span class="arr">→</span></button>
+      <button class="btn-text" onclick="showScreen('landing')">← Back to home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: SETUP (LEAD PATH) -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-setup">
+  <div class="page-container">
+    <!-- STEP 1: Team Details -->
+    <div id="setupStep1">
+      <div class="page-label">Setup · Step 01 / 02</div>
+      <h1 class="page-title">Team details.</h1>
+      <p class="page-subtitle">Start with the basics. This information helps the tool set up the right structure for your team's interviews and dashboard.</p>
+
+      <div class="form-field">
+        <label class="form-label" for="setupTeamName">Team or organization name</label>
+        <input type="text" id="setupTeamName" class="form-input" placeholder="e.g. Your company name">
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="setupTeamSize">Team size</label>
+        <input type="number" id="setupTeamSize" class="form-input" placeholder="e.g. 16" min="1" style="max-width:160px;">
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-heading">A note on minimum size</div>
+        <p>This process works best for teams of seven or more. For smaller teams, a facilitated conversation is more effective than a structured interview, because the aggregation needed to protect anonymity breaks down with fewer people.</p>
+      </div>
+
+      <div class="actions-bar">
+        <button class="btn-text" onclick="showScreen('landing')">← Back to home</button>
+        <button class="btn-primary" onclick="goToSetupStep2()">Continue to roles <span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Roles -->
+    <div id="setupStep2" class="hidden">
+      <div class="page-label">Setup · Step 02 / 02</div>
+      <h1 class="page-title">Define the roles in your team.</h1>
+      <p class="page-subtitle">The interview adapts its questions based on what each person does. A creative designer and a media buyer use AI in different ways and handle different kinds of data, so they'll see different follow-up questions.</p>
+
+      <div class="section-heading">Roles</div>
+      <p class="section-desc">Group your team by function rather than individual job title. Each group needs at least three people so that individual responses can't be identified in the dashboard. For example, rather than listing Writer, Editor, and Copywriter separately, group them as "Content team, 5 people." The grouping should reflect how people's work overlaps — roles that handle similar data and tools belong together.</p>
+
+      <div class="role-list" id="setupRoleList"></div>
+
+      <div class="add-role-row">
+        <div style="flex:2;min-width:180px;">
+          <label class="form-label">Group name</label>
+          <input type="text" id="setupNewRoleInput" class="add-role-input" placeholder="e.g. Content team" onkeydown="if(event.key==='Enter')addSetupRole()">
+        </div>
+        <div style="width:130px;">
+          <label class="form-label">No. of people</label>
+          <input type="number" id="setupNewRoleCount" class="add-role-input" placeholder="3" min="1" onkeydown="if(event.key==='Enter')addSetupRole()">
+        </div>
+        <button class="btn-secondary" onclick="addSetupRole()">Add group</button>
+      </div>
+
+      <div id="setupTally" style="margin-top:18px; display:none;">
+        <span id="setupTallyText" class="mono"></span>
+      </div>
+
+      <div class="info-box" style="margin-top:28px;">
+        <div class="info-box-heading">Why three is the minimum</div>
+        <p>Each team member selects their group before starting the interview, and the dashboard shows results by group. With fewer than three people in a group, the lead could identify individual responses even in aggregate. The tool requires every group to have at least three people before interviews can launch.</p>
+      </div>
+
+      <div id="setupWarning" class="warning-box hidden">
+        <div class="info-box-heading">Some groups are too small</div>
+        <p id="setupWarningText"></p>
+      </div>
+
+      <hr class="divider with-glyph">
+
+      <div class="section-heading">What your team will see</div>
+      <p class="section-desc">After consenting, each team member will choose from the groups you've defined here.</p>
+
+      <div class="preview-box">
+        <p class="preview-question">Your organization has set up the following roles. Choose the one that best describes your work.</p>
+        <div class="preview-buttons" id="setupPreviewButtons"></div>
+      </div>
+
+      <div class="actions-bar">
+        <button class="btn-text" onclick="goToSetupStep1()">← Back to team details</button>
+        <button class="btn-primary" id="setupContinueBtn" onclick="showScreen('dashboard')">Continue to dashboard <span class="arr">→</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: INTERVIEW -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-interview">
+  <div class="chat-container" id="chatContainer">
+    <div class="role-select-screen" id="roleSelect">
+      <div class="label label-accent">Before we begin</div>
+      <h2>Which best describes your work?</h2>
+      <p>Your organization has set up the following roles. Choose the one that fits closest to what you do day-to-day.</p>
+      <div class="role-grid" id="roleGrid"></div>
+    </div>
+    <div class="chat-thread hidden" id="chatThread"></div>
+    <div class="summary-screen" id="summaryScreen">
+      <div class="label label-accent">Complete</div>
+      <h2>Your summary.</h2>
+      <p>Here's what we heard. This will be combined with your colleagues' responses and shown to your team lead in aggregate — your individual answers won't be shared.</p>
+      <div id="summaryContent"></div>
+    </div>
+  </div>
+  <div class="interview-footer">
+    <p>Your responses are aggregated and anonymous, per the <a href="#" onclick="event.preventDefault(); showScreen('consent');">consent terms</a> you agreed to.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: DASHBOARD -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-dashboard">
+  <div class="dashboard-wrap">
+    <div class="page-label">Lead view · Round 01</div>
+    <div class="dash-head">
+      <div class="title-block">
+        <h1 class="page-title" style="margin-bottom:14px;">What your team's interviews <em>revealed</em>.</h1>
+        <p class="body-text" style="margin-bottom:0; max-width:62ch;">Four views into the responses, grouped by role. Read these findings before moving to the workshop, where you'll make calls that become policy.</p>
+      </div>
+      <div class="dash-stats">
+        <div class="dash-stat">
+          <span class="v">16<em>/16</em></span>
+          <span class="l">Responses</span>
+        </div>
+        <div class="dash-stat">
+          <span class="v">06</span>
+          <span class="l">Role groups</span>
+        </div>
+        <div class="dash-stat">
+          <span class="v">12<em>m</em></span>
+          <span class="l">Avg. interview</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <!-- Usage panel -->
+      <div class="dash-panel">
+        <div class="ph"><h3>Usage overview</h3><span class="ptag">By tool · all roles</span></div>
+        <p class="pdesc">Which tools the team is using, how often, and what for.</p>
+        <div class="bars">
+          <div class="bar-row"><span class="blabel">ChatGPT</span><div class="btrack"><div class="bfill" style="width:88%"></div></div><span class="bval">14/16</span></div>
+          <div class="bar-row"><span class="blabel">Claude</span><div class="btrack"><div class="bfill" style="width:50%"></div></div><span class="bval">8/16</span></div>
+          <div class="bar-row"><span class="blabel">Copilot</span><div class="btrack"><div class="bfill" style="width:38%"></div></div><span class="bval">6/16</span></div>
+          <div class="bar-row"><span class="blabel">Midjourney</span><div class="btrack"><div class="bfill" style="width:25%"></div></div><span class="bval">4/16</span></div>
+          <div class="bar-row"><span class="blabel">Gemini</span><div class="btrack"><div class="bfill" style="width:19%"></div></div><span class="bval">3/16</span></div>
+          <div class="bar-row"><span class="blabel">Other / niche</span><div class="btrack"><div class="bfill" style="width:31%"></div></div><span class="bval">5/16</span></div>
+        </div>
+      </div>
+
+      <!-- Data exposure -->
+      <div class="dash-panel">
+        <div class="ph"><h3>Data exposure</h3><span class="ptag">Risk tiers</span></div>
+        <p class="pdesc">What client and internal data is going into AI tools, by whom.</p>
+        <div class="tier-list">
+          <div class="tier"><span class="dot t-red"></span><span class="tname">Client emails & messages</span><span class="tcount">9/16</span></div>
+          <div class="tier"><span class="dot t-red"></span><span class="tname">Campaign performance data</span><span class="tcount">7/16</span></div>
+          <div class="tier"><span class="dot t-amber"></span><span class="tname">Brand assets / style guides</span><span class="tcount">6/16</span></div>
+          <div class="tier"><span class="dot t-amber"></span><span class="tname">Budget figures</span><span class="tcount">4/16</span></div>
+          <div class="tier"><span class="dot t-green"></span><span class="tname">Login credentials</span><span class="tcount">0/16</span></div>
+        </div>
+        <div class="pull-quote">"I made a judgment call that it was fine."</div>
+        <span class="pq-attr">— Anonymized · Client mgmt</span>
+      </div>
+
+      <!-- Guidance gaps -->
+      <div class="dash-panel">
+        <div class="ph"><h3>Guidance gaps</h3><span class="ptag">Clarity received</span></div>
+        <p class="pdesc">Where people lack clarity, and where uncertainty is limiting useful adoption.</p>
+        <div class="bars">
+          <div class="bar-row"><span class="blabel">Clear guidance</span><div class="btrack"><div class="bfill" style="width:12%; background:var(--ok)"></div></div><span class="bval">2/16</span></div>
+          <div class="bar-row"><span class="blabel">Vague guidance</span><div class="btrack"><div class="bfill" style="width:31%; background:var(--warn)"></div></div><span class="bval">5/16</span></div>
+          <div class="bar-row"><span class="blabel">Encouraged, no limits</span><div class="btrack"><div class="bfill" style="width:38%; background:var(--warn)"></div></div><span class="bval">6/16</span></div>
+          <div class="bar-row"><span class="blabel">No one has said anything</span><div class="btrack"><div class="bfill" style="width:19%; background:var(--danger)"></div></div><span class="bval">3/16</span></div>
+        </div>
+        <div class="pull-quote">"I assume it's fine if no one has said otherwise."</div>
+        <span class="pq-attr">— Anonymized · Creative</span>
+      </div>
+
+      <!-- Concerns -->
+      <div class="dash-panel">
+        <div class="ph"><h3>Team concerns</h3><span class="ptag">Self-reported</span></div>
+        <p class="pdesc">Risks and friction points the team identified.</p>
+        <div class="concern-list">
+          <div class="concern-row"><span>Client data may be at risk</span><span class="cdot"><span style="--w:81%; --bg:var(--danger); position:absolute;inset:0 auto 0 0;width:81%;background:var(--danger);"></span></span><span class="cv">13</span></div>
+          <div class="concern-row"><span>No shared standards yet</span><span class="cdot"><span style="position:absolute;inset:0 auto 0 0;width:69%;background:var(--accent);"></span></span><span class="cv">11</span></div>
+          <div class="concern-row"><span>Quality slipping over time</span><span class="cdot"><span style="position:absolute;inset:0 auto 0 0;width:50%;background:var(--accent);"></span></span><span class="cv">8</span></div>
+          <div class="concern-row"><span>Some people being left behind</span><span class="cdot"><span style="position:absolute;inset:0 auto 0 0;width:44%;background:var(--accent);"></span></span><span class="cv">7</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-bar" style="margin-top:48px;">
+      <button class="btn-text" onclick="showScreen('setup')">← Back to setup</button>
+      <button class="btn-primary" onclick="showScreen('workshop')">Continue to workshop <span class="arr">→</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: WORKSHOP -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-workshop">
+  <div class="workshop-wrap">
+    <div class="page-label">Workshop · Six decision areas</div>
+    <h1 class="page-title">Make the <em>calls</em> that become policy.</h1>
+    <p class="page-subtitle">Work through each area with your team. The tool provides an opinionated starting point based on the interview data, and pushes back when your choices contradict what the team reported.</p>
+
+    <div class="workshop-list">
+      <div class="workshop-item" data-step="1">
+        <span class="wi-num">01</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="6" y="10" width="14" height="14"/><rect x="24" y="10" width="14" height="14"/><rect x="6" y="28" width="14" height="6"/><rect x="24" y="28" width="14" height="6"/><path d="M13 14 V20 M11 17 H15" stroke-width="1"/><path d="M28 14 L33 19 M33 14 L28 19" stroke-width="1"/></svg></div>
+          <h3 class="wi-title">Which tools are approved</h3>
+          <p class="wi-desc">Decide the canonical list — what's allowed, what's restricted, what's banned outright.</p>
+        </div>
+        <div class="wi-meta"><span class="badge">Draft</span><br>~18 min</div>
+      </div>
+      <div class="workshop-item is-active" data-step="2">
+        <span class="wi-num">02</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><ellipse cx="22" cy="11" rx="14" ry="4"/><path d="M8 11 V22 C8 24 14 26 22 26 C30 26 36 24 36 22 V11"/><path d="M8 22 V33 C8 35 14 37 22 37 C30 37 36 35 36 33 V22"/></svg></div>
+          <h3 class="wi-title">Data and client information</h3>
+          <p class="wi-desc">Tiered data categories, named tools, a grey-zone protocol for "when in doubt".</p>
+        </div>
+        <div class="wi-meta"><span class="badge b-active">In progress</span><br>~24 min</div>
+      </div>
+      <div class="workshop-item" data-step="3">
+        <span class="wi-num">03</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 22 C10 12 16 8 22 8 C28 8 34 12 40 22 C34 32 28 36 22 36 C16 36 10 32 4 22 Z"/><circle cx="22" cy="22" r="6"/><circle cx="22" cy="22" r="2" fill="currentColor"/></svg></div>
+          <h3 class="wi-title">Disclosure and transparency</h3>
+          <p class="wi-desc">When to tell clients AI was involved, and what the language looks like.</p>
+        </div>
+        <div class="wi-meta"><span class="badge">Pending</span><br>~15 min</div>
+      </div>
+      <div class="workshop-item" data-step="4">
+        <span class="wi-num">04</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M22 4 L27 16 L40 17 L30 26 L33 39 L22 32 L11 39 L14 26 L4 17 L17 16 Z"/></svg></div>
+          <h3 class="wi-title">Quality and review</h3>
+          <p class="wi-desc">What review process applies, by type of output and stakes involved.</p>
+        </div>
+        <div class="wi-meta"><span class="badge">Pending</span><br>~16 min</div>
+      </div>
+      <div class="workshop-item" data-step="5">
+        <span class="wi-num">05</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 12 L22 6 L38 12 L22 18 Z"/><path d="M11 16 V26 C11 28 16 30 22 30 C28 30 33 28 33 26 V16"/><path d="M38 12 V24"/></svg></div>
+          <h3 class="wi-title">Learning and support</h3>
+          <p class="wi-desc">How the team builds capability — who teaches whom, where to ask for help.</p>
+        </div>
+        <div class="wi-meta"><span class="badge">Pending</span><br>~12 min</div>
+      </div>
+      <div class="workshop-item" data-step="6">
+        <span class="wi-num">06</span>
+        <div>
+          <div class="wi-icon"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="22" cy="22" r="16"/><path d="M22 6 V12 M22 32 V38 M6 22 H12 M32 22 H38"/><path d="M22 22 L22 14 M22 22 L30 22" stroke-width="1.6"/></svg></div>
+          <h3 class="wi-title">Governance and review cadence</h3>
+          <p class="wi-desc">Who owns the policy, when it gets revisited, what triggers an early review.</p>
+        </div>
+        <div class="wi-meta"><span class="badge">Pending</span><br>~10 min</div>
+      </div>
+    </div>
+
+    <div class="actions-bar">
+      <button class="btn-text" onclick="showScreen('dashboard')">← Back to dashboard</button>
+      <button class="btn-primary" onclick="showScreen('outputs')">Continue to outputs <span class="arr">→</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: OUTPUTS -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-outputs">
+  <div class="outputs-wrap">
+    <div class="page-label">Outputs</div>
+    <h1 class="page-title">Your policy &amp; <em>supporting documents</em>.</h1>
+    <p class="page-subtitle">Generated from your workshop decisions and grounded in your team's interview data. The policy is the primary output; the supporting documents help you implement and maintain it.</p>
+
+    <div class="primary-output">
+      <div>
+        <h3>AI Use Policy</h3>
+        <p>Your organization's AI use policy, written in plain language. Covers approved tools, data handling tiers, disclosure requirements, quality and review standards, and governance. Each clause references the team data that informed it. Designed to be reviewed and updated every 90 days.</p>
+        <div style="display:flex; gap:14px; margin-top:24px;">
+          <button class="btn-primary">Download PDF <span class="arr">↓</span></button>
+          <button class="btn-secondary">View online <span class="arr">→</span></button>
+        </div>
+      </div>
+      <div class="doc-vis">
+        <div class="dl l"></div><div class="dl m"></div><div class="dl s"></div>
+        <div class="dl l"></div><div class="dl m"></div><div class="dl m"></div>
+        <div class="dl l"></div><div class="dl s"></div><div class="dl m"></div>
+        <div class="dl l"></div><div class="dl m"></div>
+      </div>
+    </div>
+
+    <div class="outputs-grid">
+      <div class="output-card">
+        <span class="num">SUP / 01</span>
+        <h3>Conversation kit</h3>
+        <p>Talking points for communicating the policy to the team, to clients, and to new hires.</p>
+        <span class="down">Download ↓</span>
+      </div>
+      <div class="output-card">
+        <span class="num">SUP / 02</span>
+        <h3>Decision record</h3>
+        <p>The full record of what was decided in the workshop and the evidence behind each decision.</p>
+        <span class="down">Download ↓</span>
+      </div>
+      <div class="output-card">
+        <span class="num">SUP / 03</span>
+        <h3>90-day review guide</h3>
+        <p>What to look for when the policy comes up for review, including comparison prompts against the previous round's data.</p>
+        <span class="down">Download ↓</span>
+      </div>
+    </div>
+
+    <div class="actions-bar">
+      <button class="btn-text" onclick="showScreen('workshop')">← Back to workshop</button>
+      <button class="btn-primary" onclick="showScreen('landing')">Return home <span class="arr">→</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN: ABOUT -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-about">
+  <div class="about-wrap">
+    <div class="page-label">About · How this tool was built</div>
+    <h1 class="page-title">Six principles, <em>one prototype</em>.</h1>
+
+    <p class="about-lede">The principles below shaped the tool. They come out of a now well-documented pattern: AI use in workplaces is widespread, fragmented, and largely unmanaged. <strong>81%</strong> of employees use unapproved AI tools at work,<sup><a href="https://www.upguard.com/resources/the-state-of-shadow-ai">[1]</a></sup> <strong>56%</strong> lack clear guidance,<sup><a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">[2]</a></sup> and only <strong>36%</strong> of companies have formal AI governance in place.<sup><a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">[2]</a></sup> AI use has grown faster than the shared understanding of how to use it.</p>
+
+    <div class="principle">
+      <span class="pnum">§ 01</span>
+      <div>
+        <h2>Find out what is happening before the policy gets written.</h2>
+        <p>The interview comes before the workshop. The aggregated picture of the team comes before the recommendations. The lead reads what the team is doing, then makes calls about what should change. Policies built on the team's actual practice are more useful than policies written first and applied afterward.</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <span class="pnum">§ 02</span>
+      <div>
+        <h2>Anonymity has limits, and the tool says so.</h2>
+        <p>In a small team, full anonymization is not possible. People know each other's voices, projects, and contexts. The tool edits quotes, hides individual transcripts from the lead, and requires a minimum of seven people for aggregation. The consent screen names these protections and names their limits in the same paragraph.</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <span class="pnum">§ 03</span>
+      <div>
+        <h2>Show the lead what is happening before asking for decisions.</h2>
+        <p>The lead's dashboard opens on what the interviews showed, including the parts they may not have known about. The workshop that follows asks them to make calls on specific decisions. Those calls work better when the lead has already absorbed the picture.</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <span class="pnum">§ 04</span>
+      <div>
+        <h2>The workshop has opinions.</h2>
+        <p>For each decision area, the tool offers a recommended starting position, grounded in research and shaped by the team's data. The lead can accept it, adjust it, or reject it with their reasoning captured. The recommendation is a starting point to argue with, not a default to accept.</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <span class="pnum">§ 05</span>
+      <div>
+        <h2>The lead takes the interview too.</h2>
+        <p>The lead answers the same questions as the rest of the team. Their responses go into the same aggregation. Their anonymized quotes appear in the same dashboard the team sees. The tool treats the lead as one part of a team working through this.</p>
+      </div>
+    </div>
+
+    <div class="principle">
+      <span class="pnum">§ 06</span>
+      <div>
+        <h2>The agreement is meant to be revisited.</h2>
+        <p>Every ninety days, the team retakes the interview and the lead returns to the workshop. The dashboard shows what has shifted since the last round. The working agreement updates rather than starts over. AI use changes faster than annual policy cycles can keep up with.</p>
+      </div>
+    </div>
+
+    <div class="refs-block">
+      <p><strong>References</strong>
+      [1] UpGuard, <em>The State of Shadow AI</em>, 2025. <a href="https://www.upguard.com/resources/the-state-of-shadow-ai">upguard.com</a><br>
+      [2] SQ Magazine, <em>Shadow AI Usage Statistics 2026</em>, summarizing Microsoft, LinkedIn, Pew, and BlackFog/Sapio Research surveys, 2025–2026. <a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">sqmagazine.co.uk</a></p>
+    </div>
+
+    <hr class="divider with-glyph">
+
+    <div class="page-label">Who built this</div>
+    <h2 class="section-heading" style="margin-bottom:18px;">Elzanne Amao</h2>
+
+    <div class="author-block">
+      <p>A content strategist based in Cape Town, sixteen years across education marketing, technology, and communications. Most of her recent work focuses on how small teams use AI in practice rather than in theory.</p>
+      <p>She built this tool because the questions it asks are the questions she's been working through inside her own work. The gap between what teams do with AI and what they think they're doing turned out to be wider than she expected, and the existing tools for closing that gap mostly didn't fit the small teams she knew best.</p>
+      <p>Her writing on AI and the humans inside the systems we're building lives at <a href="https://elzanneamao.substack.com">elzanneamao.substack.com</a>. She holds a Master's in Strategic Communication from the University of Johannesburg.</p>
+      <p>This tool is a prototype. The methodology behind it is being used at her own workplace as part of an AI policy implementation, and what's learned from that work will shape future versions.</p>
+    </div>
+
+    <div style="margin-top:48px;">
+      <button class="btn-text" onclick="showScreen('landing')">← Back to home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<div class="site-footer" id="siteFooter">
+  <span>WorkingPolicy.AI &nbsp;<span class="glyph">❋</span>&nbsp; Built by Elzanne Amao, 2025</span>
+  <span>A prototype · v.0.3</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- TWEAKS PANEL -->
+<!-- ============================================================ -->
+<button class="tweaks-toggle" id="tweaksToggle" aria-label="Design tweaks" title="Design tweaks">+</button>
+<aside class="tweaks-panel" id="tweaksPanel">
+  <button class="tw-close" onclick="toggleTweaks()" aria-label="Close">×</button>
+  <div class="panel-sub">— Design</div>
+  <div class="panel-title">A menu of choices.</div>
+  <p class="tw-sub">Live preview — try the variants below. Your selections persist while you browse.</p>
+
+  <h4>01 / Palette</h4>
+  <div class="tw-swatches" id="twPalette"></div>
+
+  <h4>02 / Mode</h4>
+  <div class="tw-row" id="twTheme">
+    <button class="tw-chip active" data-theme="light">Paper</button>
+    <button class="tw-chip" data-theme="dark">Dark</button>
+  </div>
+
+  <h4>03 / Density</h4>
+  <div class="tw-row" id="twDensity">
+    <button class="tw-chip" data-density="cozy">Cozy</button>
+    <button class="tw-chip active" data-density="comfortable">Comfortable</button>
+    <button class="tw-chip" data-density="spacious">Spacious</button>
+  </div>
+
+  <h4>04 / Type</h4>
+  <div class="tw-row" id="twType">
+    <button class="tw-chip active" data-type="default">Newsreader + Geist</button>
+    <button class="tw-chip" data-type="plex">Source Serif + Plex</button>
+    <button class="tw-chip" data-type="allsans">All sans</button>
+  </div>
+
+  <h4>05 / Landing layout</h4>
+  <div class="tw-row" id="twLanding">
+    <button class="tw-chip active" data-variant="cards">Cards</button>
+    <button class="tw-chip" data-variant="index">Index</button>
+    <button class="tw-chip" data-variant="manifesto">Manifesto</button>
+  </div>
+
+  <h4>06 / Notebook rules</h4>
+  <div class="tw-row" id="twRules">
+    <button class="tw-chip active" data-rules="off">Off</button>
+    <button class="tw-chip" data-rules="on">On</button>
+  </div>
+</aside>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+// ============================================================
+// SCREEN NAVIGATION
+// ============================================================
+
+let currentScreen = 'landing';
+
+function showScreen(screenId) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+  });
+
+  // Show target
+  const target = document.getElementById('screen-' + screenId);
+  if (target) target.classList.add('active');
+
+  // Toggle topbar elements
+  const isInterview = (screenId === 'interview');
+  document.getElementById('topbarNav').classList.toggle('hidden', isInterview);
+  document.getElementById('topbarMeta').classList.toggle('hidden', isInterview);
+  document.getElementById('topbarInterview').classList.toggle('hidden', !isInterview);
+  document.getElementById('siteFooter').classList.toggle('hidden', isInterview);
+
+  // Update nav active state
+  document.querySelectorAll('.topbar-nav a').forEach(a => a.classList.remove('active'));
+  const navId = 'nav-' + (screenId === 'consent' ? 'landing' : screenId);
+  const navEl = document.getElementById(navId);
+  if (navEl) navEl.classList.add('active');
+
+  // Initialize interview on first visit
+  if (screenId === 'interview' && !interviewInitialized) {
+    initInterview();
+    interviewInitialized = true;
+  }
+
+  // Scroll to top
+  window.scrollTo(0, 0);
+  currentScreen = screenId;
+}
+
+
+// ============================================================
+// SETUP SCREEN (INTERACTIVE)
+// ============================================================
+
+// Each entry: { name: string, count: number }
+let setupRoles = [];
+
+function goToSetupStep1() {
+  document.getElementById('setupStep1').classList.remove('hidden');
+  document.getElementById('setupStep2').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+function goToSetupStep2() {
+  document.getElementById('setupStep1').classList.add('hidden');
+  document.getElementById('setupStep2').classList.remove('hidden');
+  renderSetupRoles();
+  window.scrollTo(0, 0);
+}
+
+function renderSetupRoles() {
+  const list = document.getElementById('setupRoleList');
+  list.innerHTML = '';
+  setupRoles.forEach((role, i) => {
+    const item = document.createElement('div');
+    item.className = 'role-item';
+    item.innerHTML = `
+      <input type="text" class="role-name-input" value="${role.name}" onchange="updateRoleName(${i}, this.value)" onblur="updateRoleName(${i}, this.value)">
+      <div class="role-right">
+        <input type="number" class="role-count-input" value="${role.count}" min="1" onchange="updateRoleCount(${i}, this.value)" onblur="updateRoleCount(${i}, this.value)">
+        <button class="role-remove" onclick="removeSetupRole(${i})">&times;</button>
+      </div>`;
+    list.appendChild(item);
+  });
+  renderSetupPreview();
+  checkSmallGroups();
+}
+
+function updateRoleName(index, value) {
+  const trimmed = value.trim();
+  if (trimmed && trimmed !== setupRoles[index].name) {
+    setupRoles[index].name = trimmed;
+    renderSetupPreview();
+  }
+}
+
+function updateRoleCount(index, value) {
+  const num = parseInt(value) || 1;
+  if (num !== setupRoles[index].count) {
+    setupRoles[index].count = num;
+    checkSmallGroups();
+  }
+}
+
+function addSetupRole() {
+  const nameInput = document.getElementById('setupNewRoleInput');
+  const countInput = document.getElementById('setupNewRoleCount');
+  const name = nameInput.value.trim();
+  const count = parseInt(countInput.value) || 1;
+  if (!name) return;
+  if (setupRoles.some(r => r.name === name)) { nameInput.value = ''; countInput.value = ''; return; }
+  setupRoles.push({ name, count });
+  nameInput.value = '';
+  countInput.value = '';
+  nameInput.focus();
+  renderSetupRoles();
+}
+
+function removeSetupRole(index) {
+  setupRoles.splice(index, 1);
+  renderSetupRoles();
+}
+
+function renderSetupPreview() {
+  const preview = document.getElementById('setupPreviewButtons');
+  preview.innerHTML = '';
+  if (setupRoles.length === 0) {
+    preview.innerHTML = '<span style="font-size:14px;color:var(--text-tertiary);font-style:italic;">Add roles above to see the preview.</span>';
+    return;
+  }
+  setupRoles.forEach(role => {
+    const span = document.createElement('span');
+    span.className = 'preview-btn';
+    span.textContent = role.name;
+    preview.appendChild(span);
+  });
+}
+
+function checkSmallGroups() {
+  const small = setupRoles.filter(r => r.count < 3);
+  const warning = document.getElementById('setupWarning');
+  const text = document.getElementById('setupWarningText');
+  const continueBtn = document.getElementById('setupContinueBtn');
+  const tallyEl = document.getElementById('setupTally');
+  const tallyText = document.getElementById('setupTallyText');
+
+  const teamSize = parseInt(document.getElementById('setupTeamSize').value) || 0;
+  const totalAssigned = setupRoles.reduce((sum, r) => sum + r.count, 0);
+
+  // Update tally display
+  if (setupRoles.length > 0 && teamSize > 0) {
+    tallyEl.style.display = 'block';
+    const diff = teamSize - totalAssigned;
+    if (diff === 0) {
+      tallyText.innerHTML = `<span style="color:#3A7A3A;">✓ ${totalAssigned} of ${teamSize} team members assigned.</span>`;
+    } else if (diff > 0) {
+      tallyText.innerHTML = `<span style="color:var(--ochre);">${totalAssigned} of ${teamSize} team members assigned — ${diff} still unaccounted for.</span>`;
+    } else {
+      tallyText.innerHTML = `<span style="color:#B44040;">${totalAssigned} assigned but team size is ${teamSize} — the total exceeds your team size by ${Math.abs(diff)}.</span>`;
+    }
+  } else if (setupRoles.length > 0 && teamSize === 0) {
+    tallyEl.style.display = 'block';
+    tallyText.innerHTML = `<span style="color:var(--ochre);">${totalAssigned} team members assigned. Go back to step 1 to set your team size so the tool can check the total.</span>`;
+  } else {
+    tallyEl.style.display = 'none';
+  }
+
+  // Determine whether continue should be enabled
+  let canContinue = true;
+  let warnings = [];
+
+  if (setupRoles.length === 0) {
+    canContinue = false;
+  }
+
+  if (small.length > 0) {
+    const names = small.map(r => `"${r.name}" (${r.count})`).join(', ');
+    warnings.push(`${names} ${small.length === 1 ? 'has' : 'have'} fewer than 3 people. Combine ${small.length === 1 ? 'this group' : 'these groups'} with a related function so that each group has at least 3 people.`);
+    canContinue = false;
+  }
+
+  if (teamSize > 0 && totalAssigned !== teamSize && setupRoles.length > 0) {
+    canContinue = false;
+  }
+
+  // Show/hide warning
+  if (warnings.length > 0) {
+    text.textContent = warnings.join(' ') + ' The interview can\'t launch until this is resolved.';
+    warning.classList.remove('hidden');
+  } else {
+    warning.classList.add('hidden');
+  }
+
+  // Enable/disable continue
+  continueBtn.disabled = !canContinue;
+  continueBtn.style.opacity = canContinue ? '1' : '0.4';
+  continueBtn.style.cursor = canContinue ? 'pointer' : 'not-allowed';
+}
+
+
+// ============================================================
+// INTERVIEW DATA
+// ============================================================
+
+const ROLES = [
+  "Client Management",
+  "Media Buying",
+  "Creative",
+  "Development",
+  "Operations",
+  "Leadership"
+];
+
+const THEME_NAMES = {
+  tools: "Tools & frequency",
+  guidance: "Guidance & confidence",
+  data: "Data & client information",
+  workflow: "How you work with AI",
+  quality: "Review & accountability",
+  outlook: "What's missing"
+};
+
+const UNIVERSAL_QUESTIONS = [
+  {
+    id: "u_tools_which",
+    theme: "tools",
+    question: "Which AI tools do you use for work?",
+    context: "Select all that apply. If you use something not listed, choose 'Other' and type the name.",
+    multiSelect: true,
+    allowOther: true,
+    options: [
+      "ChatGPT", "Claude", "Gemini", "Copilot",
+      "Image generation (Midjourney, DALL\u00b7E, Firefly)",
+      "AI features in other software (Canva, Grammarly, etc.)",
+      "Other", "None"
+    ]
+  },
+  {
+    id: "u_tools_frequency",
+    theme: "tools",
+    question: "How often do you use AI tools in your work?",
+    options: ["Multiple times a day", "A few times a week", "A few times a month", "Rarely", "I've stopped using them"]
+  },
+  {
+    id: "u_guidance_start",
+    theme: "guidance",
+    question: "How did you start using AI at work?",
+    context: "Select all that apply.",
+    multiSelect: true,
+    options: ["I explored it on my own", "A colleague showed me", "Management encouraged it", "It was part of a tool I already used", "I haven't started"]
+  },
+  {
+    id: "u_guidance_clarity",
+    theme: "guidance",
+    question: "Has anyone told you what's okay and what isn't when using AI for work?",
+    options: ["Yes, and it was clear", "Yes, but it was vague", "We've been encouraged to use it, but no limits were set", "No one has said anything", "I've been unsure and haven't asked"],
+    followUps: {
+      "No one has said anything": {
+        id: "u_guidance_clarity_f1",
+        theme: "guidance",
+        question: "How do you decide what's acceptable to do with AI in the absence of any guidance?",
+        options: ["I use my own judgment case by case", "I follow what colleagues seem to do", "I stick to low-risk tasks", "I avoid using AI to be safe"]
+      },
+      "I've been unsure and haven't asked": {
+        id: "u_guidance_clarity_f2",
+        theme: "guidance",
+        question: "What's held you back from asking?",
+        options: ["I don't know who to ask", "I don't want to seem behind", "I assume it's fine if no one has said otherwise", "I'm worried the answer will be no"]
+      },
+      "We've been encouraged to use it, but no limits were set": {
+        id: "u_guidance_clarity_f3",
+        theme: "guidance",
+        question: "When you're unsure whether a specific use is appropriate, what do you do?",
+        options: ["I go ahead and assume it's fine since we were encouraged", "I err on the side of caution", "I ask a colleague what they'd do", "I skip using AI for that task"]
+      }
+    }
+  },
+  {
+    id: "u_guidance_hesitation",
+    theme: "guidance",
+    question: "Have you ever hesitated to use AI for a task because you weren't sure if it was allowed?",
+    options: ["Yes, more than once", "Yes, once", "No", "I don't think about it"],
+    followUps: {
+      "Yes, more than once": {
+        id: "u_guidance_hesitation_f1",
+        theme: "guidance",
+        question: "Can you say roughly what kind of task made you hesitate?",
+        options: ["Working with client data", "Creating client-facing content", "Doing strategic or analytical work", "Something involving personal or sensitive information", "I'd rather not say"]
+      }
+    }
+  },
+  {
+    id: "u_data_client",
+    theme: "data",
+    question: "Have you ever put client data into an AI tool?",
+    context: "Client data includes anything that came from or belongs to a client: names, campaign results, budgets, proprietary coursework, assets not yet released to the public, student information, correspondence, or competitive intelligence.",
+    options: ["Yes, regularly", "Yes, a few times", "I'm not sure", "No, never"],
+    followUps: {
+      "Yes, regularly": {
+        id: "u_data_client_f1",
+        theme: "data",
+        question: "What kinds of client data do you typically use?",
+        context: "Select all that apply.",
+        multiSelect: true,
+        options: [
+          "Campaign performance data (results, conversion rates, spend)",
+          "Budgets or financial information",
+          "Proprietary coursework or program content",
+          "Student testimonials, reviews, or outcome data",
+          "Assets not yet released to the public (drafts, unreleased campaigns)",
+          "Client emails or messages",
+          "Brand assets or style guides",
+          "Onboarding survey responses or personas",
+          "Competitive intelligence or market research",
+          "Login credentials or account access details",
+          "Other"
+        ]
+      },
+      "Yes, a few times": {
+        id: "u_data_client_f2",
+        theme: "data",
+        question: "Was that a deliberate choice, or did it happen without much thought?",
+        options: ["I made a judgment call that it was fine", "It happened in the flow of work \u2014 I didn't stop to think", "I wasn't sure but did it anyway", "I checked with someone first"]
+      },
+      "I'm not sure": {
+        id: "u_data_client_f3",
+        theme: "data",
+        question: "Here are some examples. Have you done any of these?",
+        context: "Pasting a client email into ChatGPT to draft a reply. Uploading a performance report for analysis. Using campaign spend data to get optimization suggestions. Putting proprietary course descriptions or unreleased content into a prompt. Sharing budget figures to build a forecast.",
+        options: ["Yes, now that you describe it", "Still not sure", "No, none of those"]
+      },
+      "No, never": {
+        id: "u_data_client_f4",
+        theme: "data",
+        question: "Is that because you were told not to, or because the situation hasn't come up?",
+        options: ["I was told not to", "I decided on my own it wasn't appropriate", "It just hasn't come up", "I didn't realize that was something people did"]
+      }
+    }
+  },
+  {
+    id: "u_quality_review",
+    theme: "quality",
+    question: "When AI produces something you'll share with a colleague or a client, how do you review it?",
+    options: ["I review and edit it carefully", "I scan it quickly and send", "It goes through our normal approval process", "It depends on the stakes", "I don't usually review it separately"]
+  },
+  {
+    id: "u_outlook_wish",
+    theme: "outlook",
+    question: "Is there anything you wish you could use AI for at work but currently don't?",
+    options: ["Yes, several things", "One or two things", "Not really", "I already use it for everything I need"],
+    followUps: {
+      "Yes, several things": {
+        id: "u_outlook_wish_f1",
+        theme: "outlook",
+        question: "What's the main reason you haven't?",
+        options: ["I'm not sure it's allowed", "I don't know how to do it well", "The tools aren't good enough yet", "I haven't had time to figure it out", "I'm not sure the team would accept it"]
+      },
+      "One or two things": {
+        id: "u_outlook_wish_f2",
+        theme: "outlook",
+        question: "What's held you back?",
+        options: ["Unclear if it's allowed", "Don't know how", "Haven't had time", "Worried about quality"]
+      }
+    }
+  },
+  {
+    id: "u_outlook_concern",
+    theme: "outlook",
+    question: "Last question. What are your biggest concerns about AI use in your team right now?",
+    context: "Select all that apply.",
+    multiSelect: true,
+    options: [
+      "We might be putting client data at risk",
+      "Quality might be slipping because of over-reliance",
+      "Some people are getting left behind",
+      "We don't have shared standards",
+      "I don't have concerns about this",
+      "Something else I'd rather explain in person"
+    ]
+  }
+];
+
+const ROLE_QUESTIONS = {
+  "Client Management": [
+    { id:"cm_data_types", theme:"data", question:"What kinds of client information do you work with in AI tools?", multiSelect:true, options:["Onboarding survey responses","Course or program details","Student testimonials","Performance reports","Client emails or messages","I don't use client information in AI tools"] },
+    { id:"cm_reports", theme:"workflow", question:"When you prepare reports or updates for a client, do you use AI to help draft them?", options:["Yes, for most reports","Yes, for some","Only for internal summaries","No"] },
+    { id:"cm_client_asked", theme:"quality", question:"Has a client ever asked whether AI was used in work you delivered to them?", options:["Yes, and I told them","Yes, and I wasn't sure what to say","No"],
+      followUps:{"Yes, and I wasn't sure what to say":{id:"cm_client_asked_f1",question:"What would have helped you in that moment?",options:["A clear company position I could share","Knowing what was AI-assisted vs. fully human","A script or talking points","Permission to be honest about it"]}}},
+    { id:"cm_sensitive", theme:"data", question:"If a client sent you sensitive information \u2014 enrollment figures, student outcomes, pricing \u2014 would you know whether it's okay to put that into an AI tool?", options:["Yes, I'd know what to do","I'd probably check with someone first","I'd make a judgment call in the moment","I wouldn't put it in","I'm not sure"] }
+  ],
+  "Media Buying": [
+    { id:"mb_uses", theme:"workflow", question:"What do you use AI tools for in your media buying work?", multiSelect:true, options:["Analyzing campaign performance data","Writing ad copy","Building audience segments","Generating creative variations","Researching competitors","I don't use AI for media buying"] },
+    { id:"mb_campaign_data", theme:"data", question:"Do you paste campaign data \u2014 cost per lead, conversion rates, spend figures \u2014 into AI tools?", options:["Yes, regularly","Occasionally","Only aggregated or anonymized data","No"] },
+    { id:"mb_platform_ai", theme:"tools", question:"Do you use AI features built into ad platforms \u2014 Meta Advantage+, Google Performance Max, automated bidding?", context:"These count as AI use, even though they're built into the platform.", options:["Yes, regularly","Yes, but I don't think of them as AI","I've tried them","No"] },
+    { id:"mb_copy_review", theme:"quality", question:"When you generate ad copy with AI, what's your review process before it goes live?", options:["I review and edit it myself","It goes through the normal approval process","I use it as a starting point and rewrite","It goes live without separate review"] }
+  ],
+  "Creative": [
+    { id:"cr_tools", theme:"tools", question:"Which AI tools do you use for creative work?", multiSelect:true, options:["Midjourney","DALL\u00b7E","Adobe Firefly","Canva AI features","ChatGPT for brainstorming","Other","None"] },
+    { id:"cr_stage", theme:"workflow", question:"Do you use AI for final deliverables or for early-stage ideation?", options:["Final deliverables sometimes","Ideation and brainstorming only","Both","Neither"] },
+    { id:"cr_brand_assets", theme:"data", question:"Have you used client brand assets \u2014 logos, style guides, brand photography \u2014 as inputs to an AI tool?", options:["Yes","I think so, but I'm not sure","No"],
+      followUps:{"Yes":{id:"cr_brand_assets_f1",question:"Was there a reason you used the originals rather than describing what you needed?",options:["The result is better with the actual asset","It was faster","I didn't think about an alternative","I was asked to"]}}},
+    { id:"cr_disclosure", theme:"quality", question:"When you deliver AI-assisted creative work, is the client aware that AI was involved?", options:["Yes, always","Sometimes","I don't think they know","I'm not sure whether they need to know"] }
+  ],
+  "Development": [
+    { id:"dev_uses", theme:"workflow", question:"What do you use AI tools for in your development work?", multiSelect:true, options:["Writing code","Debugging","Code review","Writing documentation","Researching solutions","I don't use AI for development"] },
+    { id:"dev_codebase", theme:"data", question:"Do you use AI coding assistants that have access to your codebase?", context:"Tools like GitHub Copilot, Cursor, or similar that can see your project files.", options:["Yes, with full codebase access","Yes, but I paste specific snippets","No"] },
+    { id:"dev_credentials", theme:"data", question:"Have you put API keys, credentials, or infrastructure details into an AI tool?", options:["Yes","I might have accidentally","No","I'm not sure"],
+      followUps:{"Yes":{id:"dev_credentials_f1",question:"Was that intentional, or did it happen as part of a larger paste?",options:["I pasted code that included them","I needed help with the configuration","I didn't notice they were in there","I knew but it was a test environment"]},"I might have accidentally":{id:"dev_credentials_f2",question:"That's worth knowing. Do you usually check what's in a code snippet before pasting it into an AI tool?",options:["Yes, I try to","Not consistently","No, I paste the whole file usually"]}}},
+    { id:"dev_review", theme:"quality", question:"When AI generates code for a client project, do you review it differently than code you wrote yourself?", options:["Yes, I review it more carefully","I review it the same way","I review it less carefully because it's usually correct","I don't think about it differently"] }
+  ],
+  "Operations": [
+    { id:"ops_docs", theme:"workflow", question:"What kinds of documents or data do you handle with AI tools?", multiSelect:true, options:["Onboarding materials","Process documentation","Hiring or HR-related documents","Financial or contractual documents","Internal communications","None"] },
+    { id:"ops_drafts", theme:"workflow", question:"Do you use AI to draft materials that go to new clients or new hires?", options:["Yes, regularly","Occasionally","I use it for drafts but rewrite everything","No"] },
+    { id:"ops_personal_data", theme:"data", question:"Does any of the information you work with include personal data \u2014 names, contact details, salary, contracts?", options:["Yes, regularly","Sometimes","Rarely","No"],
+      followUps:{"Yes, regularly":{id:"ops_personal_data_f1",question:"Does any of that personal data go into AI tools?",options:["Yes","I try to remove it first","I'm not sure","No, I keep that separate"]}}}
+  ],
+  "Leadership": [
+    { id:"lead_expectations", theme:"guidance", question:"How do you currently set expectations for your team about AI use?", options:["I've given clear guidance","I've mentioned it informally","I haven't addressed it yet","I'm not sure what to tell them"] },
+    { id:"lead_strategic", theme:"workflow", question:"Do you use AI tools for strategic work \u2014 summarizing documents, drafting plans, reviewing proposals?", options:["Yes, regularly","Sometimes","Rarely","No"] },
+    { id:"lead_awareness", theme:"guidance", question:"Are you aware of what AI tools your team is using day to day?", options:["Yes, I have a good sense","I know some of it","I don't really know","I'd be surprised by what I found out"] },
+    { id:"lead_client_facing", theme:"quality", question:"If a client asked about your company's AI practices today, would you have a clear answer?", options:["Yes","I could give a general answer","I'd need to check first","No"] }
+  ]
+};
+
+
+// ============================================================
+// INTERVIEW STATE
+// ============================================================
+
+let interviewInitialized = false;
+let selectedRole = null;
+let questionQueue = [];
+let currentQIndex = 0;
+let answers = {};
+let totalQuestions = 0;
+let currentTheme = null;
+
+// History stack for back navigation
+// Each entry: { qIndex, questionId, theme, elementsAdded: count, followUpInserted: bool }
+let history = [];
+
+const NONE_LABELS = ["None", "I haven't started", "I don't use AI for media buying",
+  "I don't use AI for development", "I don't use client information in AI tools",
+  "I don't have concerns about this"];
+
+
+// ============================================================
+// INTERVIEW INIT
+// ============================================================
+
+function initInterview() {
+  const grid = document.getElementById('roleGrid');
+  grid.innerHTML = '';
+  ROLES.forEach(role => {
+    const card = document.createElement('div');
+    card.className = 'role-card';
+    card.textContent = role;
+    card.addEventListener('click', () => selectRole(role, card));
+    grid.appendChild(card);
+  });
+  updateProgress(0, 1);
+}
+
+function selectRole(role, card) {
+  if (selectedRole) return;
+  selectedRole = role;
+
+  document.querySelectorAll('.role-card').forEach(c => {
+    if (c === card) c.classList.add('selected');
+    else c.style.opacity = '0.35';
+  });
+
+  buildQuestionQueue(role);
+  totalQuestions = questionQueue.length;
+
+  setTimeout(() => {
+    document.getElementById('roleSelect').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('roleSelect').classList.add('hidden');
+      document.getElementById('chatThread').classList.remove('hidden');
+      showNextQuestion();
+    }, 300);
+  }, 500);
+}
+
+function buildQuestionQueue(role) {
+  const universal = [...UNIVERSAL_QUESTIONS];
+  const roleSpecific = ROLE_QUESTIONS[role] || [];
+  const themeOrder = ["tools", "guidance", "data", "workflow", "quality", "outlook"];
+  const allQuestions = [...universal, ...roleSpecific];
+
+  questionQueue = [];
+  themeOrder.forEach(theme => {
+    questionQueue.push(...allQuestions.filter(q => q.theme === theme));
+  });
+}
+
+
+// ============================================================
+// QUESTION DISPLAY
+// ============================================================
+
+function showNextQuestion() {
+  if (currentQIndex >= questionQueue.length) {
+    showSummary();
+    return;
+  }
+
+  const q = questionQueue[currentQIndex];
+  const thread = document.getElementById('chatThread');
+  const container = document.getElementById('chatContainer');
+  let elementsAdded = 0;
+
+  // Theme transition — follow-ups inherit parent's theme
+  const qTheme = q.theme || currentTheme;
+  if (qTheme !== currentTheme) {
+    currentTheme = qTheme;
+    const transition = document.createElement('div');
+    transition.className = 'msg msg-transition';
+    if (currentQIndex === 0) {
+      transition.style.borderTop = 'none';
+      transition.style.paddingTop = '0';
+    }
+    transition.innerHTML = `<div class="msg-text">${THEME_NAMES[currentTheme] || ''}</div>`;
+    thread.appendChild(transition);
+    elementsAdded++;
+    document.getElementById('themeLabel').textContent = THEME_NAMES[currentTheme] || '';
+  }
+
+  // Question
+  const msgQ = document.createElement('div');
+  msgQ.className = 'msg msg-tool';
+  msgQ.innerHTML = `<div class="msg-text">${q.question}</div>`;
+  thread.appendChild(msgQ);
+  elementsAdded++;
+
+  // Context
+  if (q.context) {
+    const msgCtx = document.createElement('div');
+    msgCtx.className = 'msg msg-context';
+    msgCtx.innerHTML = `<div class="msg-text">${q.context}</div>`;
+    thread.appendChild(msgCtx);
+    elementsAdded++;
+  }
+
+  // Picker
+  const picker = document.createElement('div');
+  picker.className = 'picker' + (q.multiSelect ? ' multi-select' : '');
+  picker.setAttribute('data-question-id', q.id);
+
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'picker-btn';
+    btn.textContent = opt;
+    if (q.multiSelect) {
+      btn.addEventListener('click', () => toggleMultiSelect(btn, picker, q));
+    } else {
+      btn.addEventListener('click', () => handleSingleSelect(opt, btn, picker, q));
+    }
+    picker.appendChild(btn);
+  });
+  thread.appendChild(picker);
+  elementsAdded++;
+
+  // Other input
+  if (q.allowOther) {
+    const otherWrap = document.createElement('div');
+    otherWrap.className = 'other-input-wrap';
+    otherWrap.innerHTML = `<input type="text" class="other-input" placeholder="Type tool names, separated by commas"><span class="other-input-hint">e.g. Notion AI, Otter.ai</span>`;
+    picker.setAttribute('data-has-other', 'true');
+    thread.appendChild(otherWrap);
+    elementsAdded++;
+  }
+
+  // Confirm button for multi-select
+  if (q.multiSelect) {
+    const confirmBtn = document.createElement('button');
+    confirmBtn.className = 'confirm-btn';
+    confirmBtn.textContent = 'Continue';
+    confirmBtn.addEventListener('click', () => handleMultiConfirm(picker, q, confirmBtn, elementsAdded));
+    thread.appendChild(confirmBtn);
+    elementsAdded++;
+  }
+
+  // Back button (except for first question)
+  if (currentQIndex > 0) {
+    const backBtn = document.createElement('button');
+    backBtn.className = 'back-answer-btn';
+    backBtn.textContent = '\u2190 Change previous answer';
+    backBtn.addEventListener('click', () => goBack());
+    thread.appendChild(backBtn);
+    elementsAdded++;
+  }
+
+  // Store element count for this question render (before answer)
+  // We'll finalize in the answer handler
+  window._pendingElements = elementsAdded;
+
+  updateProgress(currentQIndex, totalQuestions);
+
+  setTimeout(() => {
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }, 100);
+}
+
+
+// ============================================================
+// SELECTION HANDLERS
+// ============================================================
+
+function toggleMultiSelect(btn, picker, q) {
+  btn.classList.toggle('selected');
+  const isNone = NONE_LABELS.includes(btn.textContent);
+
+  if (isNone && btn.classList.contains('selected')) {
+    picker.querySelectorAll('.picker-btn').forEach(b => {
+      if (b !== btn) b.classList.remove('selected');
+    });
+    if (picker.getAttribute('data-has-other')) {
+      let el = picker.nextElementSibling;
+      if (el && el.classList.contains('other-input-wrap')) el.classList.remove('visible');
+    }
+  } else if (!isNone && btn.classList.contains('selected')) {
+    picker.querySelectorAll('.picker-btn').forEach(b => {
+      if (NONE_LABELS.includes(b.textContent)) b.classList.remove('selected');
+    });
+  }
+
+  if (btn.textContent === 'Other' && picker.getAttribute('data-has-other')) {
+    let el = picker.nextElementSibling;
+    if (el && el.classList.contains('other-input-wrap')) {
+      el.classList.toggle('visible', btn.classList.contains('selected'));
+      if (btn.classList.contains('selected')) {
+        setTimeout(() => el.querySelector('.other-input').focus(), 100);
+      }
+    }
+  }
+
+  // Find confirm button
+  const hasSelection = picker.querySelector('.picker-btn.selected');
+  let confirmEl = picker.nextElementSibling;
+  while (confirmEl && !confirmEl.classList.contains('confirm-btn')) {
+    confirmEl = confirmEl.nextElementSibling;
+  }
+  if (confirmEl) confirmEl.classList.toggle('visible', !!hasSelection);
+}
+
+function handleMultiConfirm(picker, q, confirmBtn, preAnswerElements) {
+  const selected = [];
+  picker.querySelectorAll('.picker-btn.selected').forEach(b => selected.push(b.textContent));
+
+  let otherValues = [];
+  if (q.allowOther && selected.includes('Other')) {
+    let el = picker.nextElementSibling;
+    if (el && el.classList.contains('other-input-wrap')) {
+      const val = el.querySelector('.other-input').value.trim();
+      if (val) otherValues = val.split(',').map(v => v.trim()).filter(v => v);
+    }
+    const idx = selected.indexOf('Other');
+    if (otherValues.length > 0) selected.splice(idx, 1, ...otherValues);
+  }
+
+  answers[q.id] = selected;
+
+  picker.querySelectorAll('.picker-btn').forEach(b => {
+    if (!b.classList.contains('selected')) b.classList.add('faded');
+    b.style.pointerEvents = 'none';
+  });
+  confirmBtn.style.display = 'none';
+
+  if (q.allowOther) {
+    let el = picker.nextElementSibling;
+    if (el && el.classList.contains('other-input-wrap')) {
+      el.querySelector('.other-input').disabled = true;
+      el.style.opacity = '0.5';
+    }
+  }
+
+  // Hide back button
+  let backEl = confirmBtn.nextElementSibling;
+  if (backEl && backEl.classList.contains('back-answer-btn')) {
+    backEl.style.display = 'none';
+    preAnswerElements++; // back btn was counted
+  }
+
+  showUserBubble(selected.join(', '));
+  preAnswerElements++; // user bubble
+
+  history.push({
+    qIndex: currentQIndex,
+    questionId: q.id,
+    theme: currentTheme,
+    elementsAdded: preAnswerElements,
+    followUpInserted: false
+  });
+
+  currentQIndex++;
+  setTimeout(() => showNextQuestion(), 600);
+}
+
+function handleSingleSelect(opt, btn, picker, q) {
+  answers[q.id] = opt;
+
+  btn.classList.add('selected');
+  picker.querySelectorAll('.picker-btn').forEach(b => {
+    if (b !== btn) b.classList.add('faded');
+  });
+
+  let preAnswerElements = window._pendingElements || 0;
+
+  // Hide back button
+  let sibling = picker.nextElementSibling;
+  while (sibling) {
+    if (sibling.classList.contains('back-answer-btn')) {
+      sibling.style.display = 'none';
+      break;
+    }
+    sibling = sibling.nextElementSibling;
+  }
+
+  showUserBubble(opt);
+  preAnswerElements++; // user bubble
+
+  let followUpInserted = false;
+  if (q.followUps && q.followUps[opt]) {
+    questionQueue.splice(currentQIndex + 1, 0, q.followUps[opt]);
+    totalQuestions = questionQueue.length;
+    followUpInserted = true;
+  }
+
+  history.push({
+    qIndex: currentQIndex,
+    questionId: q.id,
+    theme: currentTheme,
+    elementsAdded: preAnswerElements,
+    followUpInserted: followUpInserted
+  });
+
+  currentQIndex++;
+  setTimeout(() => showNextQuestion(), 600);
+}
+
+function showUserBubble(text) {
+  const thread = document.getElementById('chatThread');
+  const msg = document.createElement('div');
+  msg.className = 'msg msg-user';
+  msg.innerHTML = `<div class="msg-bubble">${text}</div>`;
+  thread.appendChild(msg);
+}
+
+
+// ============================================================
+// BACK NAVIGATION
+// ============================================================
+
+function goBack() {
+  if (history.length === 0) return;
+
+  const last = history.pop();
+  const thread = document.getElementById('chatThread');
+
+  // Remove DOM elements added by the current (unanswered) question
+  // and the previous answered question
+  // Current unanswered question elements
+  const currentElements = window._pendingElements || 0;
+  for (let i = 0; i < currentElements; i++) {
+    if (thread.lastChild) thread.removeChild(thread.lastChild);
+  }
+
+  // Previous answered question elements (including user bubble)
+  for (let i = 0; i < last.elementsAdded; i++) {
+    if (thread.lastChild) thread.removeChild(thread.lastChild);
+  }
+
+  // Remove the follow-up if one was inserted
+  if (last.followUpInserted) {
+    questionQueue.splice(last.qIndex + 1, 1);
+    totalQuestions = questionQueue.length;
+  }
+
+  // Clear the answer
+  delete answers[last.questionId];
+
+  // Reset state
+  currentQIndex = last.qIndex;
+
+  // Figure out what theme we should be on
+  // Look at the previous question's theme if there is one
+  if (currentQIndex > 0) {
+    currentTheme = questionQueue[currentQIndex - 1].theme;
+  } else {
+    currentTheme = null;
+  }
+
+  // Re-show the question
+  showNextQuestion();
+}
+
+
+// ============================================================
+// PROGRESS
+// ============================================================
+
+function updateProgress(current, total) {
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = total > 0 ? `${current} of ${total}` : '';
+}
+
+
+// ============================================================
+// SUMMARY
+// ============================================================
+
+function showSummary() {
+  updateProgress(totalQuestions, totalQuestions);
+  document.getElementById('themeLabel').textContent = 'Complete';
+
+  const thread = document.getElementById('chatThread');
+  const container = document.getElementById('chatContainer');
+
+  const closing = document.createElement('div');
+  closing.className = 'msg msg-tool';
+  closing.style.marginTop = '40px';
+  closing.innerHTML = `<div class="msg-text">That's everything. Thank you for taking the time \u2014 here's a summary of what you shared.</div>`;
+  thread.appendChild(closing);
+
+  setTimeout(() => {
+    const summaryScreen = document.getElementById('summaryScreen');
+    summaryScreen.style.display = 'block';
+    const content = document.getElementById('summaryContent');
+    content.innerHTML = '';
+
+    // Tools
+    const tools = answers['u_tools_which'] || [];
+    const frequency = answers['u_tools_frequency'] || 'Unknown';
+    content.innerHTML += summaryCard('Your tools',
+      tools.length > 0 ? tools.join(', ') : 'No tools selected',
+      `Usage frequency: ${frequency}`,
+      tools.includes('None') ? 'tag-amber' : 'tag-blue',
+      tools.includes('None') ? 'No AI tools' : `${tools.length} tool${tools.length!==1?'s':''}`);
+
+    // Data
+    const cd = answers['u_data_client'] || 'Not answered';
+    let dTag='tag-green', dLabel='Low exposure';
+    if (cd==='Yes, regularly'){dTag='tag-red';dLabel='Regular client data use';}
+    else if (cd==='Yes, a few times'){dTag='tag-amber';dLabel='Some client data use';}
+    else if (cd==="I'm not sure"){dTag='tag-amber';dLabel='Uncertain';}
+    let dDetail = `Client data in AI tools: ${cd}`;
+    const dt = answers['u_data_client_f1'] || answers['u_data_client_f2'];
+    if (Array.isArray(dt)) dDetail += `<br>Types: ${dt.join(', ')}`;
+    else if (typeof dt==='string') dDetail += `<br>Context: ${dt}`;
+    content.innerHTML += summaryCard('Data handling', dDetail, '', dTag, dLabel);
+
+    // Guidance
+    const cl = answers['u_guidance_clarity'] || 'Not answered';
+    const hes = answers['u_guidance_hesitation'] || 'Not answered';
+    let gTag='tag-green', gLabel='Clear';
+    if (cl==='No one has said anything'||cl==="I've been unsure and haven't asked"){gTag='tag-red';gLabel='No guidance received';}
+    else if (cl==='Yes, but it was vague'||cl==="We've been encouraged to use it, but no limits were set"){gTag='tag-amber';gLabel='Guidance without boundaries';}
+    content.innerHTML += summaryCard('Guidance & confidence',
+      `Guidance received: ${cl}<br>Hesitation about use: ${hes}`, '', gTag, gLabel);
+
+    // Concerns
+    const concerns = answers['u_outlook_concern'] || ['Not answered'];
+    const concernText = Array.isArray(concerns) ? concerns.join(', ') : concerns;
+    content.innerHTML += summaryCard('Concerns', concernText,
+      'These will be included in the team-wide tension map \u2014 without identifying you.', 'tag-blue', 'Noted');
+
+    // Next steps
+    content.innerHTML += `<div class="summary-closing">
+      <span class="sc-label">A note on what happens next</span>
+      <p>Your responses have been recorded. They'll be combined with your colleagues' responses and presented to your team lead as aggregate patterns. Your individual answers will not be shared. The team will use these patterns to build a shared working agreement about AI use.</p>
+    </div>`;
+
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+  }, 800);
+}
+
+function summaryCard(title, detail, extra, tagClass, tagLabel) {
+  return `<div class="summary-card"><span class="scnum">●</span><div><h3>${title}</h3><p>${detail}</p>${extra?`<p style="margin-top:8px; font-style:italic; color:var(--ink-mute);">${extra}</p>`:''}</div><span class="summary-tag ${tagClass}">${tagLabel}</span></div>`;
+}
+
+
+// ============================================================
+// TWEAKS PANEL
+// ============================================================
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "sage",
+  "theme": "light",
+  "density": "spacious",
+  "type": "plex",
+  "landingVariant": "cards",
+  "rules": "off"
+}/*EDITMODE-END*/;
+
+const PALETTES = [
+  { id: 'sage',       a: 'oklch(97.5% 0.008 95)', b: 'oklch(48% 0.07 165)', label: 'Sage' },
+  { id: 'slate',      a: 'oklch(97% 0.005 240)',  b: 'oklch(48% 0.085 245)', label: 'Slate' },
+  { id: 'oxblood',    a: 'oklch(96% 0.012 70)',   b: 'oklch(38% 0.11 20)',  label: 'Oxblood' },
+  { id: 'terracotta', a: 'oklch(98% 0.008 75)',   b: 'oklch(58% 0.13 45)',  label: 'Terra' },
+];
+
+let tweaks = { ...TWEAK_DEFAULTS };
+
+function applyTweaks() {
+  const html = document.documentElement;
+  // palette: sage is default, others set data-palette
+  if (tweaks.palette === 'sage') html.removeAttribute('data-palette');
+  else html.setAttribute('data-palette', tweaks.palette);
+  if (tweaks.theme === 'light') html.removeAttribute('data-theme');
+  else html.setAttribute('data-theme', tweaks.theme);
+  html.setAttribute('data-density', tweaks.density);
+  if (tweaks.type === 'default') html.removeAttribute('data-type');
+  else html.setAttribute('data-type', tweaks.type);
+  document.body.setAttribute('data-rules', tweaks.rules);
+
+  // Landing variant
+  document.querySelectorAll('.landing-variant').forEach(el => {
+    el.classList.toggle('hidden', el.dataset.variant !== tweaks.landingVariant);
+  });
+
+  // Sync chip active states
+  syncChips('twPalette', 'palette');
+  syncChips('twTheme', 'theme', 'data-theme');
+  syncChips('twDensity', 'density', 'data-density');
+  syncChips('twType', 'type', 'data-type');
+  syncChips('twLanding', 'landingVariant', 'data-variant');
+  syncChips('twRules', 'rules', 'data-rules');
+}
+
+function syncChips(containerId, key, attr) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.querySelectorAll('.tw-chip, .tw-swatch').forEach(el => {
+    const val = attr ? el.getAttribute(attr) : el.dataset.palette;
+    el.classList.toggle('active', val === tweaks[key]);
+  });
+}
+
+function setTweak(key, value) {
+  tweaks[key] = value;
+  applyTweaks();
+  // Try to persist via host (no-op if not in our shell)
+  try {
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: value } }, '*');
+  } catch (e) {}
+}
+
+function buildTweaksPanel() {
+  // Palette swatches
+  const palWrap = document.getElementById('twPalette');
+  palWrap.innerHTML = PALETTES.map(p => `
+    <div class="tw-swatch" data-palette="${p.id}" title="${p.label}">
+      <span class="a" style="background:${p.a}"></span>
+      <span class="b" style="background:${p.b}"></span>
+      <span class="label">${p.label}</span>
+    </div>`).join('');
+  palWrap.querySelectorAll('.tw-swatch').forEach(el => {
+    el.addEventListener('click', () => setTweak('palette', el.dataset.palette));
+  });
+
+  // Chip listeners
+  document.querySelectorAll('#twTheme .tw-chip').forEach(el =>
+    el.addEventListener('click', () => setTweak('theme', el.dataset.theme))
+  );
+  document.querySelectorAll('#twDensity .tw-chip').forEach(el =>
+    el.addEventListener('click', () => setTweak('density', el.dataset.density))
+  );
+  document.querySelectorAll('#twType .tw-chip').forEach(el =>
+    el.addEventListener('click', () => setTweak('type', el.dataset.type))
+  );
+  document.querySelectorAll('#twLanding .tw-chip').forEach(el =>
+    el.addEventListener('click', () => setTweak('landingVariant', el.dataset.variant))
+  );
+  document.querySelectorAll('#twRules .tw-chip').forEach(el =>
+    el.addEventListener('click', () => setTweak('rules', el.dataset.rules))
+  );
+
+  // Open / close
+  document.getElementById('tweaksToggle').addEventListener('click', toggleTweaks);
+}
+
+function toggleTweaks() {
+  document.getElementById('tweaksPanel').classList.toggle('open');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildTweaksPanel();
+  applyTweaks();
+});
+
+// Host edit-mode protocol
+window.addEventListener('message', (e) => {
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === '__activate_edit_mode') {
+    document.getElementById('tweaksPanel').classList.add('open');
+  } else if (e.data.type === '__deactivate_edit_mode') {
+    document.getElementById('tweaksPanel').classList.remove('open');
+  }
+});
+try {
+  window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+} catch (e) {}
+
+</script>
+</body>
+</html>

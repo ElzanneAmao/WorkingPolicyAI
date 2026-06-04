@@ -2121,6 +2121,49 @@
   }
   .topbar-signout:hover { color: var(--ink); }
 
+  /* Invite bar — shown on dashboard after team is saved */
+  .invite-bar {
+    background: var(--accent-wash);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    padding: 14px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .invite-bar .ib-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .invite-bar .ib-url {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .invite-bar .ib-copy {
+    font-size: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: var(--sans);
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+  .invite-bar .ib-copy:hover { background: var(--accent); color: var(--paper); }
+
   /* Demo CTA */
   .demo-cta {
     margin-top: 28px;
@@ -2431,7 +2474,7 @@
 
       <div class="actions-bar">
         <button class="btn-text" onclick="goToSetupStep1()">← Back to team details</button>
-        <button class="btn-primary" id="setupContinueBtn" onclick="showScreen('dashboard')">Continue to dashboard <span class="arr">→</span></button>
+        <button class="btn-primary" id="setupContinueBtn" onclick="saveTeamAndContinue()">Continue to dashboard <span class="arr">→</span></button>
       </div>
     </div>
   </div>
@@ -2471,6 +2514,11 @@
     <button class="db-exit" onclick="exitDemo()">← Exit demo</button>
   </div>
   <div class="dashboard-wrap">
+    <div class="invite-bar hidden" id="inviteBar">
+      <span class="ib-label">Share with your team</span>
+      <span class="ib-url" id="inviteUrl"></span>
+      <button class="ib-copy" id="copyInviteBtn" onclick="copyInviteLink()">Copy link</button>
+    </div>
     <div class="page-label">Lead view · Round 01</div>
     <div class="dash-head reveal">
       <div class="title-block">
@@ -3855,6 +3903,90 @@ async function handleSignUp() {
 async function handleSignOut() {
   await _supa.auth.signOut();
   showScreen('landing');
+}
+
+
+// ============================================================
+// TEAM CREATION & INVITE LINK
+// ============================================================
+
+let currentTeam = null;
+
+async function saveTeamAndContinue() {
+  if (!currentUser) { showScreen('auth'); return; }
+
+  const btn = document.getElementById('setupContinueBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  const teamName = document.getElementById('setupTeamName').value.trim();
+  const teamSize = parseInt(document.getElementById('setupTeamSize').value) || 0;
+
+  // Save team record
+  const { data: team, error: teamError } = await _supa
+    .from('teams')
+    .insert({ name: teamName, size: teamSize, lead_id: currentUser.id })
+    .select()
+    .single();
+
+  if (teamError) {
+    btn.disabled = false;
+    btn.innerHTML = 'Continue to dashboard <span class="arr">→</span>';
+    showSetupError('Could not save team: ' + teamError.message);
+    return;
+  }
+
+  // Save role groups
+  const roleRows = setupRoles.map(r => ({
+    team_id: team.id,
+    name: r.name,
+    expected_count: r.count
+  }));
+
+  const { error: rolesError } = await _supa.from('roles').insert(roleRows);
+
+  if (rolesError) {
+    btn.disabled = false;
+    btn.innerHTML = 'Continue to dashboard <span class="arr">→</span>';
+    showSetupError('Could not save roles: ' + rolesError.message);
+    return;
+  }
+
+  currentTeam = team;
+  btn.disabled = false;
+  btn.innerHTML = 'Continue to dashboard <span class="arr">→</span>';
+  updateInviteBar();
+  showScreen('dashboard');
+}
+
+function showSetupError(msg) {
+  let el = document.getElementById('setupSaveError');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'setupSaveError';
+    el.style.cssText = 'color:var(--danger);font-size:13px;padding:10px 14px;background:var(--danger-wash);margin-top:12px;';
+    document.getElementById('setupContinueBtn').parentElement.appendChild(el);
+  }
+  el.textContent = msg;
+}
+
+function updateInviteBar() {
+  if (!currentTeam) return;
+  const bar   = document.getElementById('inviteBar');
+  const urlEl = document.getElementById('inviteUrl');
+  const link  = `${location.origin}${location.pathname}?team=${currentTeam.code}`;
+  if (urlEl) urlEl.textContent = link;
+  if (bar)   bar.classList.remove('hidden');
+}
+
+function copyInviteLink() {
+  if (!currentTeam) return;
+  const link = `${location.origin}${location.pathname}?team=${currentTeam.code}`;
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('copyInviteBtn');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = 'Copy link'; }, 2000);
+  });
 }
 
 

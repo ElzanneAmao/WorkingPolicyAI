@@ -6,40 +6,46 @@
 <title>WorkingPolicy.AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   /* Fonts loaded via <link> below; this block is the design system */
 
   :root {
-    /* Palette — Elzanne Amao brand base */
-    --paper:        #ffffff;
-    --paper-deep:   #f1f4f2;
-    --ink:          #2c3830;
-    --ink-soft:     #4a5c52;
-    --ink-mute:     #7a8c6e;
-    --ink-faint:    #a8b9a0;
-    --rule:         #dde2dd;
-    --rule-soft:    #edf0ed;
+    /* Brand palette — Elzanne Amao */
+    --white:     #ffffff;
+    --coolwhite: #f1f4f2;
+    --moss:      #2c3830;
+    --sage:      #7a8c6e;
+    --gold:      #a8a44c;
+    --seaglass:  #b8cdd4;
+    --hairline:  #dde2dd;
 
-    /* WorkingPolicy accent — policy slate */
-    --accent:       #2d5c72;
-    --accent-soft:  #4a7d94;
-    --accent-wash:  #e6f0f5;
+    --paper:        var(--white);
+    --paper-deep:   #ffffff;
+    --ink:          var(--moss);
+    --ink-soft:     #45524a;
+    --ink-mute:     var(--sage);
+    --ink-faint:    #a7b1a3;
+    --rule:         var(--hairline);
+    --rule-soft:    #e7ebe7;
+    --accent:       var(--gold);
+    --accent-soft:  #bcb869;
+    --accent-wash:  #eef0e6;
+    --warn:         #9c7b2e;
+    --warn-wash:    #f1eddc;
+    --danger:       #9e4b3a;
+    --danger-wash:  #f0e2dd;
+    --ok:           #5f7556;
+    --ok-wash:      #e6ece1;
+    --info:         #5f7f8a;
+    --info-wash:    #e1eaec;
+    --on-invert:      var(--coolwhite);
+    --on-invert-mute: var(--seaglass);
 
-    /* Status */
-    --warn:         #c47c30;
-    --warn-wash:    #faf3ea;
-    --danger:       #b03030;
-    --danger-wash:  #faebeb;
-    --ok:           #3a7a4a;
-    --ok-wash:      #eaf4ee;
-    --info:         #2d5c72;
-    --info-wash:    #e6f0f5;
-
-    /* Typography — Elzanne Amao brand fonts */
+    /* Typography */
     --serif: "Cormorant Garamond", Georgia, serif;
-    --sans:  "DM Sans", system-ui, -apple-system, sans-serif;
-    --mono:  "IBM Plex Mono", ui-monospace, monospace;
+    --sans: "DM Sans", system-ui, -apple-system, sans-serif;
+    --mono: "DM Sans", system-ui, sans-serif;
 
     /* Density (Comfortable default) */
     --space-unit: 8px;
@@ -51,14 +57,14 @@
     --bar-pad-x: 40px;
 
     /* Type sizing */
-    --display-size: clamp(36px, 4.4vw, 56px);
-    --display-line: 1.06;
-    --h1-size: clamp(30px, 3.4vw, 40px);
-    --h2-size: 22px;
+    --display-size: clamp(40px, 5vw, 64px);
+    --display-line: 1.04;
+    --h1-size: clamp(34px, 3.8vw, 48px);
+    --h2-size: 26px;
     --body-size: 16px;
-    --small-size: 13px;
-    --label-size: 11px;
-    --label-tracking: 0.16em;
+    --small-size: 14px;
+    --label-size: 12px;
+    --label-tracking: 0.12em;
 
     --radius: 0px;
   }
@@ -68,32 +74,102 @@
     --page-pad-y: 48px;
     --bar-pad-y: 14px;
     --body-size: 15px;
-    --display-size: clamp(30px, 3.6vw, 44px);
+    --display-size: clamp(34px, 4vw, 52px);
   }
   [data-density="spacious"] {
     --page-pad-y: 104px;
     --bar-pad-y: 26px;
     --body-size: 17px;
-    --display-size: clamp(40px, 5.2vw, 68px);
+    --display-size: clamp(46px, 6vw, 82px);
+  }
+
+  /* Palettes */
+  [data-palette="slate"] {
+    --paper: oklch(97% 0.005 240);
+    --paper-deep: oklch(94% 0.008 240);
+    --ink: oklch(20% 0.018 245);
+    --ink-soft: oklch(36% 0.015 245);
+    --ink-mute: oklch(54% 0.012 245);
+    --ink-faint: oklch(70% 0.01 245);
+    --rule: oklch(88% 0.01 240);
+    --rule-soft: oklch(93% 0.007 240);
+    --accent: oklch(48% 0.085 245);
+    --accent-soft: oklch(60% 0.06 245);
+    --accent-wash: oklch(94% 0.025 245);
+  }
+  [data-palette="oxblood"] {
+    --paper: oklch(96% 0.012 70);
+    --paper-deep: oklch(93% 0.018 65);
+    --ink: oklch(20% 0.02 25);
+    --ink-soft: oklch(36% 0.018 25);
+    --ink-mute: oklch(54% 0.014 25);
+    --ink-faint: oklch(72% 0.012 25);
+    --rule: oklch(86% 0.018 35);
+    --rule-soft: oklch(92% 0.014 40);
+    --accent: oklch(38% 0.11 20);
+    --accent-soft: oklch(52% 0.09 20);
+    --accent-wash: oklch(93% 0.028 30);
+  }
+  [data-palette="terracotta"] {
+    --paper: oklch(98% 0.008 75);
+    --paper-deep: oklch(95.5% 0.014 70);
+    --ink: oklch(25% 0.012 50);
+    --ink-soft: oklch(42% 0.012 50);
+    --ink-mute: oklch(58% 0.01 50);
+    --ink-faint: oklch(74% 0.008 50);
+    --rule: oklch(88% 0.014 60);
+    --rule-soft: oklch(93% 0.01 60);
+    --accent: oklch(58% 0.13 45);
+    --accent-soft: oklch(68% 0.1 45);
+    --accent-wash: oklch(95% 0.03 60);
   }
 
   /* Dark mode */
   [data-theme="dark"] {
-    --paper:        #1c2220;
-    --paper-deep:   #232c28;
-    --ink:          #f1f4f2;
-    --ink-soft:     #c8d4cc;
-    --ink-mute:     #8da890;
-    --ink-faint:    #567060;
-    --rule:         #2e3c38;
-    --rule-soft:    #263028;
-    --accent:       #6aaccc;
-    --accent-soft:  #4a8aaa;
-    --accent-wash:  #1a3a4a;
+    --paper: oklch(18% 0.015 240);
+    --paper-deep: oklch(22% 0.015 240);
+    --ink: oklch(95% 0.008 95);
+    --ink-soft: oklch(80% 0.012 95);
+    --ink-mute: oklch(64% 0.01 240);
+    --ink-faint: oklch(48% 0.01 240);
+    --rule: oklch(30% 0.018 240);
+    --rule-soft: oklch(25% 0.015 240);
+    --accent: oklch(72% 0.09 160);
+    --accent-soft: oklch(64% 0.07 160);
+    --accent-wash: oklch(28% 0.04 160);
+  }
+  [data-theme="dark"][data-palette="slate"] {
+    --accent: oklch(72% 0.1 245);
+    --accent-soft: oklch(64% 0.08 245);
+    --accent-wash: oklch(28% 0.04 245);
+  }
+  [data-theme="dark"][data-palette="oxblood"] {
+    --paper: oklch(18% 0.015 25);
+    --paper-deep: oklch(22% 0.018 25);
+    --accent: oklch(68% 0.12 25);
+    --accent-soft: oklch(58% 0.1 25);
+    --accent-wash: oklch(28% 0.06 25);
+  }
+  [data-theme="dark"][data-palette="terracotta"] {
+    --accent: oklch(72% 0.13 50);
+    --accent-soft: oklch(64% 0.1 50);
+    --accent-wash: oklch(28% 0.06 50);
+  }
+
+  /* Type pairing variants */
+  [data-type="plex"] {
+    --serif: "Source Serif 4", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  [data-type="allsans"] {
+    --serif: "Geist", "Söhne", system-ui, sans-serif;
+    --sans: "Geist", "Söhne", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  *::selection { background: var(--accent-wash); color: var(--ink); }
+  *::selection { background: var(--seaglass); color: var(--moss); }
 
   html, body {
     font-family: var(--sans);
@@ -103,32 +179,13 @@
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "kern", "liga";
+    font-feature-settings: "ss01", "ss02", "cv11";
   }
 
   body {
     min-height: 100vh;
     transition: background 0.2s ease, color 0.2s ease;
   }
-
-  /* Notebook-paper feel: subtle horizontal rule pattern, very faint */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 31px,
-      color-mix(in oklch, var(--rule-soft) 60%, transparent) 31px,
-      color-mix(in oklch, var(--rule-soft) 60%, transparent) 32px
-    );
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 0;
-  }
-  body[data-rules="on"]::before { opacity: 0.55; }
 
   /* ========== TYPOGRAPHY ========== */
   .label, .mono {
@@ -150,7 +207,7 @@
     font-family: var(--serif);
     font-size: var(--display-size);
     line-height: var(--display-line);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.025em;
     color: var(--ink);
     text-wrap: balance;
@@ -285,7 +342,7 @@
   .page-title {
     font-family: var(--serif);
     font-size: var(--h1-size);
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.12;
     color: var(--ink);
     margin-bottom: 24px;
@@ -409,7 +466,7 @@
     font-family: var(--serif);
     font-size: var(--display-size);
     line-height: var(--display-line);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.025em;
     margin-bottom: 32px;
     text-wrap: balance;
@@ -526,17 +583,24 @@
   }
   .landing-index .row:hover .arrow { transform: translateX(6px); }
 
-  /* Landing variant: manifesto */
+  /* Landing variant: manifesto — block grid */
   .landing-manifesto {
-    border-top: 1px solid var(--rule);
-    padding-top: 56px;
+    padding-top: 0;
+  }
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
   }
   .landing-manifesto .principle {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-    gap: 32px;
-    padding: 24px 0;
-    align-items: baseline;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 36px 32px;
+    min-height: 176px;
   }
   .landing-manifesto .principle .pnum {
     font-family: var(--mono);
@@ -547,14 +611,14 @@
   }
   .landing-manifesto .principle .ptext {
     font-family: var(--serif);
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 1.4;
-    letter-spacing: -0.015em;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.32;
+    letter-spacing: -0.01em;
     color: var(--ink);
     text-wrap: pretty;
   }
-  .landing-manifesto .principle em { color: var(--accent); font-style: italic; }
+  .landing-manifesto .principle em { color: var(--accent); font-style: normal; }
   .landing-manifesto .actions {
     display: flex;
     gap: 12px;
@@ -679,7 +743,7 @@
     color: var(--ink);
     background: var(--paper-deep);
     border: 1px solid var(--rule);
-    border-radius: 0;
+    border-radius: 2px;
     padding: 4px 8px;
     width: 52px;
     text-align: center;
@@ -781,7 +845,7 @@
     border: 1px solid var(--rule);
     background: var(--paper);
     color: var(--ink);
-    border-radius: 0;
+    border-radius: 2px;
     cursor: default;
   }
 
@@ -856,7 +920,7 @@
     background: var(--ink);
     color: var(--paper);
     padding: 12px 18px;
-    border-radius: 0;
+    border-radius: 2px;
     font-size: 15px;
     line-height: 1.5;
     display: inline-block;
@@ -908,7 +972,7 @@
     cursor: pointer;
     transition: all 0.15s;
     line-height: 1.4;
-    border-radius: 0;
+    border-radius: 2px;
     text-align: left;
   }
   .picker-btn:hover {
@@ -936,7 +1000,7 @@
     background: var(--accent);
     color: white;
     cursor: pointer;
-    border-radius: 0;
+    border-radius: 2px;
     display: none;
     margin-top: 12px;
     margin-left: 28px;
@@ -961,7 +1025,7 @@
     background: var(--paper);
     color: var(--ink);
     outline: none;
-    border-radius: 0;
+    border-radius: 2px;
   }
   .other-input:focus { border-color: var(--accent); }
   .other-input::placeholder { color: var(--ink-faint); }
@@ -1513,15 +1577,16 @@
     padding: var(--page-pad-y) 24px 80px;
   }
   .about-lede {
-    font-family: var(--serif);
-    font-size: 22px;
-    line-height: 1.5;
-    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--ink-soft);
     margin-bottom: 40px;
     text-wrap: pretty;
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
   }
-  .about-lede strong { color: var(--accent); font-weight: 400; font-style: italic; }
+  .about-lede strong { color: var(--accent); font-weight: 500; font-style: normal; }
   .about-lede sup a { color: var(--accent); text-decoration: none; }
   .principle {
     padding: 24px 0;
@@ -1697,7 +1762,7 @@
     background: var(--paper);
     color: var(--ink);
     cursor: pointer;
-    border-radius: 0;
+    border-radius: 2px;
     transition: all 0.15s;
   }
   .tw-chip:hover { border-color: var(--ink); }
@@ -1766,6 +1831,7 @@
     .topbar-nav { display: none; }
     .landing-wrap { padding: 48px 20px; }
     .landing-cards { grid-template-columns: 1fr; }
+    .welcome-cards { grid-template-columns: 1fr; }
     .landing-card { border-right: none; border-bottom: 1px solid var(--rule); }
     .landing-card:last-child { border-bottom: none; }
     .landing-index .row { grid-template-columns: 40px 1fr 40px; }
@@ -1777,17 +1843,236 @@
     .site-footer { flex-direction: column; gap: 8px; }
     .dash-head { flex-direction: column; align-items: flex-start; gap: 16px; }
   }
+
+  /* ============================================================ */
+  /* BRAND OVERRIDES — Elzanne Amao design system                 */
+  /* ============================================================ */
+
+  /* Quiet, light body weight — the brand reads calm */
+  html, body { font-weight: 300; }
+  .topbar-nav a, .topbar-meta, .topbar-meta strong,
+  .topbar-progress-text, .role-count { font-weight: 400; }
+
+  /* Cormorant Garamond is always medium (500), never the thin 400 */
+  .serif, .display, .page-title, .section-heading, .about-lede, .pull-quote,
+  .landing-hero h1, .landing-card h3, .landing-index .row h3,
+  .landing-manifesto .principle .ptext, .consent-section h3, .role-name-input,
+  .preview-question, .role-select-screen h2, .summary-screen h2, .summary-card h3,
+  .dash-stat .v, .dash-panel h3, .wi-title, .primary-output h3, .output-card h3,
+  .principle h2, .msg-tool .msg-text, .tweaks-panel .tw-title,
+  .tweaks-panel .panel-title, .topbar-logo .name { font-weight: 500; }
+  .display em, .page-title em, .about-lede strong, .topbar-logo .name em,
+  .landing-hero h1 em, .dash-stat .v em { font-weight: 500; font-style: normal; }
+  /* No italics anywhere — per brand direction */
+  em, i, .pull-quote, [style*="italic"] { font-style: normal !important; }
+
+  /* Sharp corners everywhere — a defining brand trait */
+  .picker-btn, .confirm-btn, .other-input, .preview-btn, .tw-chip,
+  .role-count-input, .msg-user .msg-bubble, .tweaks-toggle,
+  .tier .dot { border-radius: 0 !important; }
+
+  /* Flat — no elevation. Tweak chrome stays minimal. */
+  .tweaks-toggle { box-shadow: none !important; }
+  .tweaks-panel { box-shadow: 0 8px 30px rgba(44,56,48,0.10) !important; }
+
+  /* Buttons: square, uppercase, tracked, medium */
+  .btn-primary, .btn-secondary, .btn-text {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: var(--ink); border-color: var(--ink);
+    color: var(--paper); opacity: 0.88;
+  }
+  .btn-secondary:hover {
+    background: var(--ink); border-color: var(--ink); color: var(--paper);
+  }
+  /* Gold confirm button: gold fill, moss text (brand gold variant) */
+  .confirm-btn {
+    color: var(--moss) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .confirm-btn:hover { color: var(--paper) !important; }
+
+  /* The signature gold accent line under the big headings */
+  .page-title { position: relative; }
+  .page-title::after,
+  .landing-hero h1::after,
+  .role-select-screen h2::after,
+  .summary-screen h2::after {
+    content: "";
+    display: block;
+    width: 72px;
+    height: 2px;
+    background: var(--accent);
+    margin-top: 22px;
+  }
+  .landing-hero h1::after { margin-top: 30px; }
+
+  /* Welcome landing — centered hero + icon cards */
+  .landing-hero.center { text-align: center; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .landing-hero.center .page-label { justify-content: center; margin-bottom: 22px; }
+  .landing-hero.center h1 { margin-bottom: 0; }
+  .landing-hero.center h1::after { margin-left: auto; margin-right: auto; }
+  .landing-hero.center .lede { margin: 26px auto 0; max-width: 60ch; }
+  .welcome-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 56px;
+  }
+  .welcome-card {
+    background: color-mix(in srgb, var(--ink) 4%, var(--paper));
+    border: 1px solid var(--rule);
+    padding: 38px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    min-height: 282px;
+    text-align: left;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.25s ease, transform 0.25s ease, background 0.25s ease;
+  }
+  .welcome-card:hover { border-color: var(--ink-mute); transform: translateY(-3px); }
+  .welcome-card .wc-icon { width: 46px; height: 46px; color: var(--ink-mute); margin-bottom: 22px; transition: color 0.25s ease; }
+  .welcome-card .wc-icon svg { width: 100%; height: 100%; display: block; }
+  .welcome-card:hover .wc-icon { color: var(--accent); }
+  .welcome-card h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .welcome-card p { font-size: 14px; color: var(--ink-soft); line-height: 1.6; flex: 1; }
+  .welcome-card .go {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: 22px;
+    display: inline-flex;
+    gap: 7px;
+    align-items: center;
+    transition: gap 0.2s ease;
+  }
+  .welcome-card:hover .go { gap: 12px; }
+  /* Dashboard title shares a tight two-column head — eyebrow carries the brand there */
+  #screen-dashboard .page-title::after { display: none; }
+
+  /* Pull-quotes sit on a sea-glass field, brand-style */
+  .pull-quote {
+    background: color-mix(in srgb, var(--seaglass) 32%, transparent);
+    padding: 14px 18px;
+  }
+
+  /* Divider marker → the brand's solid gold square */
+  .divider.with-glyph::before {
+    content: "";
+    width: 9px; height: 9px;
+    background: var(--accent);
+    top: -5px; left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    box-shadow: 0 0 0 9px var(--paper);
+  }
+  .site-footer .glyph { font-size: 8px; vertical-align: middle; }
+
+  /* About — principles as airy reveal blocks */
+  #screen-about .principle {
+    grid-template-columns: 92px 1fr;
+    gap: 32px;
+    padding: 40px 0;
+    align-items: start;
+  }
+  #screen-about .principle:first-of-type { padding-top: 8px; }
+  #screen-about .principle .pnum {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  #screen-about .principle h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  #screen-about .principle p {
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.62;
+    max-width: 52ch;
+  }
+
+  /* Consent — a touch more air between terms */
+  #screen-consent .consent-section { padding: 34px 0; }
+
+  /* ===== Scroll-reveal — calm fade + rise (brand motion) ===== */
+  .reveal-on .reveal,
+  .reveal-on .reveal-soft { opacity: 0; }
+  .reveal-on .reveal {
+    transform: translateY(16px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  .reveal-on .reveal-soft { transition: opacity 1s ease; }
+  .reveal-on .reveal.is-in,
+  .reveal-on .reveal-soft.is-in { opacity: 1; transform: none; }
+  .reveal-on .reveal-stagger > .reveal:nth-child(2),
+  .reveal-on .reveal-stagger > .reveal-soft:nth-child(2) { transition-delay: .08s; }
+  .reveal-on .reveal-stagger > .reveal:nth-child(3),
+  .reveal-on .reveal-stagger > .reveal-soft:nth-child(3) { transition-delay: .16s; }
+  .reveal-on .reveal-stagger > .reveal:nth-child(4),
+  .reveal-on .reveal-stagger > .reveal-soft:nth-child(4) { transition-delay: .24s; }
+  .reveal-on .reveal-stagger > .reveal:nth-child(5),
+  .reveal-on .reveal-stagger > .reveal-soft:nth-child(5) { transition-delay: .32s; }
+  .reveal-on .reveal-stagger > .reveal:nth-child(6),
+  .reveal-on .reveal-stagger > .reveal-soft:nth-child(6) { transition-delay: .40s; }
+  /* Grid groups: children fade in (opacity-only) with a gentle stagger */
+  .reveal-on .reveal-group > * { opacity: 0; transition: opacity .9s ease; }
+  .reveal-on .reveal-group.is-in > * { opacity: 1; }
+  .reveal-on .reveal-group > *:nth-child(2) { transition-delay: .07s; }
+  .reveal-on .reveal-group > *:nth-child(3) { transition-delay: .14s; }
+  .reveal-on .reveal-group > *:nth-child(4) { transition-delay: .21s; }
+  .reveal-on .reveal-group > *:nth-child(5) { transition-delay: .28s; }
+  .reveal-on .reveal-group > *:nth-child(6) { transition-delay: .35s; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-on .reveal, .reveal-on .reveal-soft, .reveal-on .reveal-group > * {
+      opacity: 1 !important; transform: none !important; transition: none !important;
+    }
+  }
+  @media print {
+    .reveal-on .reveal, .reveal-on .reveal-soft, .reveal-on .reveal-group > * {
+      opacity: 1 !important; transform: none !important;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .manifesto-grid { grid-template-columns: 1fr; }
+    #screen-about .principle { grid-template-columns: 1fr; gap: 6px; padding: 30px 0; }
+    #screen-about .principle .pnum { font-size: 38px; }
+  }
 </style>
 </head>
 <body data-rules="off">
+<script>document.documentElement.classList.add('reveal-on');</script>
 
 <!-- ============================================================ -->
 <!-- TOP BAR -->
 <!-- ============================================================ -->
 <div class="topbar" id="topbar">
   <a class="topbar-logo" onclick="showScreen('landing')">
-    <span class="mark icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="3" width="12" height="18" rx="0"/><path d="M16 3 L20 7 L20 21 L4 21"/><path d="M7 9 H13 M7 12 H15 M7 15 H15 M7 18 H11"/><rect x="13" y="3" width="3" height="4" fill="var(--accent)" stroke="none" opacity="0.6"/></svg></span>
-    <span class="name">Working<em>Policy</em><span style="font-family:var(--mono);font-size:0.6em;color:var(--ink-mute);letter-spacing:0.05em;vertical-align:super;margin-left:1px;">.AI</span></span>
+    <span class="mark icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 3 H15 L19 7 V21 H5 Z"/><path d="M15 3 V7 H19"/><path d="M8 11 H16 M8 14 H16 M8 17 H13"/></svg></span>
+    <span class="name">Working<em>Policy</em>.AI</span>
   </a>
   <nav class="topbar-nav" id="topbarNav">
     <a onclick="showScreen('landing')" id="nav-landing">Home</a>
@@ -1819,81 +2104,31 @@
       <span>Cape Town · Est. 2025</span>
     </div>
 
-    <div class="landing-hero">
-      <h1 id="landingHeadline">Build a <em>shared agreement</em> about how your team uses AI.</h1>
-      <p class="lede" id="landingLede">A structured process for teams that have been using AI for a while but don't have a shared sense of how. Start with discovery, move to decisions, leave with something the team can live by.</p>
+    <div class="landing-hero center">
+      <div class="page-label">Welcome</div>
+      <h1 id="landingHeadline">Let's get everyone on the same page about AI.</h1>
+      <p class="lede" id="landingLede">Your team has probably been using AI for a while now — quietly, and in its own way. This is a calm, structured way to find out what's really happening, and to agree together on how you want to work. About fifteen minutes per person.</p>
     </div>
 
-    <!-- Variant A: three cards (default) -->
-    <div class="landing-cards landing-variant" data-variant="cards">
-      <a class="landing-card" onclick="showScreen('setup')">
-        <span class="num">01</span>
-        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="18" cy="12" r="4"/><circle cx="9" cy="24" r="3.5"/><circle cx="27" cy="24" r="3.5"/><path d="M18 16 V20 M11 22 L15.5 18 M25 22 L20.5 18"/></svg></span>
-        <h3>Organization setup</h3>
-        <p>Configure your team, review the dashboard, run the workshop.</p>
-        <span class="go">For team leads →</span>
+    <div class="welcome-cards">
+      <a class="welcome-card" onclick="showScreen('setup')">
+        <span class="wc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="8" r="3"/><path d="M3 19c0-3.1 2.5-5.3 5.5-5.3S14 15.9 14 19"/><circle cx="17" cy="7" r="2.3"/><path d="M16.2 13.1c2.7-.2 4.8 1.7 4.8 4.6"/></svg></span>
+        <h3>For team leads</h3>
+        <p>Add your team, watch the shared picture build as people respond, then run the workshop that turns it into an agreement.</p>
+        <span class="go">Set up your team →</span>
       </a>
-      <a class="landing-card" onclick="showScreen('consent')">
-        <span class="num">02</span>
-        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 30 V14 L18 6 L30 14 V30 Z"/><path d="M14 30 V20 H22 V30"/><circle cx="18" cy="14" r="0" fill="currentColor"/></svg></span>
-        <h3>Team member</h3>
-        <p>Take the interview. See your summary. Contribute to the team picture.</p>
-        <span class="go">For team members →</span>
+      <a class="welcome-card" onclick="showScreen('consent')">
+        <span class="wc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5h18v12H8.5L3 20.5V4.5Z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01"/></svg></span>
+        <h3>For team members</h3>
+        <p>Answer a few honest questions about how you use AI. It's short, it's calm, and you'll see your own summary first.</p>
+        <span class="go">Take part →</span>
       </a>
-      <a class="landing-card" onclick="showScreen('about')">
-        <span class="num">03</span>
-        <span class="icon" style="width:36px;height:36px"><svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="18" cy="18" r="13"/><path d="M18 12 V18 L23 21"/><circle cx="18" cy="18" r="1.2" fill="currentColor" stroke="none"/></svg></span>
-        <h3>About this tool</h3>
-        <p>The thinking behind this tool and who built it.</p>
+      <a class="welcome-card" onclick="showScreen('about')">
+        <span class="wc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.2C9.8 4.8 6.7 4.3 3.5 4.9V18c3.2-.6 6.3-.1 8.5 1.3 2.2-1.4 5.3-1.9 8.5-1.3V4.9c-3.2-.6-6.3-.1-8.5 1.3Z"/><path d="M12 6.2v13.1"/></svg></span>
+        <h3>About</h3>
+        <p>See the thinking behind the tool, and exactly how your answers are handled, before you decide anything.</p>
         <span class="go">Read more →</span>
       </a>
-    </div>
-
-    <!-- Variant B: numbered index -->
-    <div class="landing-index landing-variant hidden" data-variant="index">
-      <div class="row" onclick="showScreen('setup')">
-        <span class="num">01</span>
-        <h3>Organization setup</h3>
-        <p>Configure your team, review the dashboard, run the workshop.</p>
-        <span class="arrow">→</span>
-      </div>
-      <div class="row" onclick="showScreen('consent')">
-        <span class="num">02</span>
-        <h3>Team member interview</h3>
-        <p>Take the interview. See your summary. Contribute to the team picture.</p>
-        <span class="arrow">→</span>
-      </div>
-      <div class="row" onclick="showScreen('about')">
-        <span class="num">03</span>
-        <h3>About this tool</h3>
-        <p>The thinking behind this tool and who built it.</p>
-        <span class="arrow">→</span>
-      </div>
-    </div>
-
-    <!-- Variant C: manifesto -->
-    <div class="landing-manifesto landing-variant hidden" data-variant="manifesto">
-      <div class="principle">
-        <span class="pnum">§ 01</span>
-        <p class="ptext"><em>Find out</em> what is happening before the policy gets written.</p>
-      </div>
-      <div class="principle">
-        <span class="pnum">§ 02</span>
-        <p class="ptext">Anonymity has limits, and the tool <em>says so</em>.</p>
-      </div>
-      <div class="principle">
-        <span class="pnum">§ 03</span>
-        <p class="ptext">The workshop has <em>opinions</em> — not defaults.</p>
-      </div>
-      <div class="principle">
-        <span class="pnum">§ 04</span>
-        <p class="ptext">The agreement is <em>meant to be revisited</em> every 90 days.</p>
-      </div>
-      <div class="actions">
-        <a class="btn-primary" onclick="showScreen('setup')">Start setup <span class="arr">→</span></a>
-        <a class="btn-secondary" onclick="showScreen('consent')">I'm a team member <span class="arr">→</span></a>
-        <a class="btn-text" onclick="showScreen('about')">Read the thinking</a>
-      </div>
     </div>
 
     <p class="landing-note">This process works best for teams of seven or more. Smaller teams may find a facilitated conversation more effective than a structured interview.</p>
@@ -1909,34 +2144,34 @@
     <h1 class="page-title">What you're agreeing to.</h1>
     <p class="page-subtitle">This interview asks about how you use AI at work. Your answers help your team build a shared agreement. Before you begin, here's how your responses are handled.</p>
 
-    <div class="consent-section">
-      <h3>Your answers are aggregated, not shared individually.</h3>
-      <p class="body-text">Your team lead will see patterns across the team, grouped by role. They will not see your individual responses or be able to identify which answers are yours. Responses are combined with at least two other people in your role group before anything appears on the dashboard.</p>
-      <div class="consent-detail">With a team of this size, full anonymity is difficult to guarantee. If your role group has fewer than three people, your responses will be combined with a related group. This is an honest limitation, and it's the reason the tool requires a minimum of seven people.</div>
+    <div class="consent-section reveal">
+      <h3>Aggregated, never individual.</h3>
+      <p class="body-text">Your lead sees patterns by role — never your individual answers. Nothing shows on the dashboard until at least three people in your group have responded.</p>
+      <div class="consent-detail">In a team this small, anonymity isn't absolute. Groups under three get merged with a related one. That's why seven people is the minimum.</div>
     </div>
 
-    <div class="consent-section">
+    <div class="consent-section reveal">
       <h3>You're not identified — at all.</h3>
-      <p class="body-text">The interview doesn't ask for your name or email and doesn't link your responses to any account. The only people who log in to this tool are team leads, and only for setup and reporting. As a team member, you arrive via a shared link and leave no trace tied to you personally.</p>
-      <div class="consent-detail">A consequence of this: once you submit, your responses can't be edited or withdrawn, because there's no individual record to find. If you change your mind partway through, close the tab — partial responses are discarded.</div>
+      <p class="body-text">No name, no email, no account. You arrive through a shared link and leave no trace tied to you.</p>
+      <div class="consent-detail">The trade-off: once you submit, answers can't be edited or withdrawn — there's no record of “you” to find. Changed your mind partway? Just close the tab.</div>
     </div>
 
-    <div class="consent-section">
+    <div class="consent-section reveal">
       <h3>What's collected.</h3>
-      <p class="body-text">The interview covers six areas: which tools you use, how often, what data goes in, how you review AI output, what guidance you've received, and what concerns or gaps you see. Most questions use structured answers (you pick from options), with occasional free-text fields where a predefined list wouldn't capture your answer.</p>
+      <p class="body-text">Six areas: which tools you use, how often, what data goes in, how you review output, what guidance you've had, and where the gaps are. Mostly multiple-choice, with a few optional free-text fields.</p>
     </div>
 
-    <div class="consent-section">
+    <div class="consent-section reveal">
       <h3>How long it's kept.</h3>
-      <p class="body-text">Aggregated responses are retained so that future rounds can track how the team's practices change over time. If this process runs quarterly, the previous round's aggregate data is used as a comparison baseline. Individual answers are never stored on their own.</p>
+      <p class="body-text">Aggregated results are kept so future rounds can track what changes. Individual answers are never stored on their own.</p>
     </div>
 
-    <div class="consent-section">
+    <div class="consent-section reveal">
       <h3>What you can do.</h3>
-      <p class="body-text">You can stop the interview at any point and your partial responses will be discarded. After completing it, you'll see a personal summary of what you shared — that summary is shown to you in your browser and isn't sent anywhere separately. You can change any answer during the interview using the back button.</p>
+      <p class="body-text">Stop anytime — partial answers are discarded. When you finish, you'll see a private summary, shown only in your browser. Change any answer with the back button.</p>
     </div>
 
-    <div class="consent-actions">
+    <div class="consent-actions reveal">
       <button class="btn-primary" onclick="showScreen('interview')">I understand, begin the interview <span class="arr">→</span></button>
       <button class="btn-text" onclick="showScreen('landing')">← Back to home</button>
     </div>
@@ -2060,7 +2295,7 @@
 <div class="screen" id="screen-dashboard">
   <div class="dashboard-wrap">
     <div class="page-label">Lead view · Round 01</div>
-    <div class="dash-head">
+    <div class="dash-head reveal">
       <div class="title-block">
         <h1 class="page-title" style="margin-bottom:14px;">What your team's interviews <em>revealed</em>.</h1>
         <p class="body-text" style="margin-bottom:0; max-width:62ch;">Four views into the responses, grouped by role. Read these findings before moving to the workshop, where you'll make calls that become policy.</p>
@@ -2081,7 +2316,7 @@
       </div>
     </div>
 
-    <div class="dash-grid">
+    <div class="dash-grid reveal-group">
       <!-- Usage panel -->
       <div class="dash-panel">
         <div class="ph"><h3>Usage overview</h3><span class="ptag">By tool · all roles</span></div>
@@ -2154,7 +2389,7 @@
     <h1 class="page-title">Make the <em>calls</em> that become policy.</h1>
     <p class="page-subtitle">Work through each area with your team. The tool provides an opinionated starting point based on the interview data, and pushes back when your choices contradict what the team reported.</p>
 
-    <div class="workshop-list">
+    <div class="workshop-list reveal-group">
       <div class="workshop-item" data-step="1">
         <span class="wi-num">01</span>
         <div>
@@ -2227,7 +2462,7 @@
     <h1 class="page-title">Your policy &amp; <em>supporting documents</em>.</h1>
     <p class="page-subtitle">Generated from your workshop decisions and grounded in your team's interview data. The policy is the primary output; the supporting documents help you implement and maintain it.</p>
 
-    <div class="primary-output">
+    <div class="primary-output reveal">
       <div>
         <h3>AI Use Policy</h3>
         <p>Your organization's AI use policy, written in plain language. Covers approved tools, data handling tiers, disclosure requirements, quality and review standards, and governance. Each clause references the team data that informed it. Designed to be reviewed and updated every 90 days.</p>
@@ -2244,7 +2479,7 @@
       </div>
     </div>
 
-    <div class="outputs-grid">
+    <div class="outputs-grid reveal-group">
       <div class="output-card">
         <span class="num">SUP / 01</span>
         <h3>Conversation kit</h3>
@@ -2282,55 +2517,55 @@
 
     <p class="about-lede">The principles below shaped the tool. They come out of a now well-documented pattern: AI use in workplaces is widespread, fragmented, and largely unmanaged. <strong>81%</strong> of employees use unapproved AI tools at work,<sup><a href="https://www.upguard.com/resources/the-state-of-shadow-ai">[1]</a></sup> <strong>56%</strong> lack clear guidance,<sup><a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">[2]</a></sup> and only <strong>36%</strong> of companies have formal AI governance in place.<sup><a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">[2]</a></sup> AI use has grown faster than the shared understanding of how to use it.</p>
 
-    <div class="principle">
-      <span class="pnum">§ 01</span>
+    <div class="principle reveal">
+      <span class="pnum">01</span>
       <div>
-        <h2>Find out what is happening before the policy gets written.</h2>
-        <p>The interview comes before the workshop. The aggregated picture of the team comes before the recommendations. The lead reads what the team is doing, then makes calls about what should change. Policies built on the team's actual practice are more useful than policies written first and applied afterward.</p>
+        <h2>Find out before you write.</h2>
+        <p>The interview comes first. Policy built on what the team actually does beats policy written in the abstract.</p>
       </div>
     </div>
 
-    <div class="principle">
-      <span class="pnum">§ 02</span>
+    <div class="principle reveal">
+      <span class="pnum">02</span>
       <div>
-        <h2>Anonymity has limits, and the tool says so.</h2>
-        <p>In a small team, full anonymization is not possible. People know each other's voices, projects, and contexts. The tool edits quotes, hides individual transcripts from the lead, and requires a minimum of seven people for aggregation. The consent screen names these protections and names their limits in the same paragraph.</p>
+        <h2>Anonymity has limits — and the tool says so.</h2>
+        <p>Quotes get edited, transcripts stay hidden from the lead, and seven people is the floor. Where anonymity can't be guaranteed, it's named out loud.</p>
       </div>
     </div>
 
-    <div class="principle">
-      <span class="pnum">§ 03</span>
+    <div class="principle reveal">
+      <span class="pnum">03</span>
       <div>
-        <h2>Show the lead what is happening before asking for decisions.</h2>
-        <p>The lead's dashboard opens on what the interviews showed, including the parts they may not have known about. The workshop that follows asks them to make calls on specific decisions. Those calls work better when the lead has already absorbed the picture.</p>
+        <h2>See the picture before deciding.</h2>
+        <p>The dashboard opens before the workshop. You absorb what's actually happening, then make the calls.</p>
       </div>
     </div>
 
-    <div class="principle">
-      <span class="pnum">§ 04</span>
+    <div class="principle reveal">
+      <span class="pnum">04</span>
       <div>
         <h2>The workshop has opinions.</h2>
-        <p>For each decision area, the tool offers a recommended starting position, grounded in research and shaped by the team's data. The lead can accept it, adjust it, or reject it with their reasoning captured. The recommendation is a starting point to argue with, not a default to accept.</p>
+        <p>Each decision area opens with a recommendation, grounded in research and your team's data — a position to argue with, not a default to accept.</p>
       </div>
     </div>
 
-    <div class="principle">
-      <span class="pnum">§ 05</span>
+    <div class="principle reveal">
+      <span class="pnum">05</span>
       <div>
         <h2>The lead takes the interview too.</h2>
-        <p>The lead answers the same questions as the rest of the team. Their responses go into the same aggregation. Their anonymized quotes appear in the same dashboard the team sees. The tool treats the lead as one part of a team working through this.</p>
+        <p>Same questions, same aggregation, same dashboard. The lead is one voice in the team, not above it.</p>
       </div>
     </div>
 
-    <div class="principle">
-      <span class="pnum">§ 06</span>
+    <div class="principle reveal">
+      <span class="pnum">06</span>
       <div>
         <h2>The agreement is meant to be revisited.</h2>
-        <p>Every ninety days, the team retakes the interview and the lead returns to the workshop. The dashboard shows what has shifted since the last round. The working agreement updates rather than starts over. AI use changes faster than annual policy cycles can keep up with.</p>
+        <p>Every ninety days the team re-interviews and the agreement updates. AI moves faster than annual policy cycles.</p>
       </div>
     </div>
 
-    <div class="refs-block">
+    <div class="refs-block reveal">
       <p><strong>References</strong>
       [1] UpGuard, <em>The State of Shadow AI</em>, 2025. <a href="https://www.upguard.com/resources/the-state-of-shadow-ai">upguard.com</a><br>
       [2] SQ Magazine, <em>Shadow AI Usage Statistics 2026</em>, summarizing Microsoft, LinkedIn, Pew, and BlackFog/Sapio Research surveys, 2025–2026. <a href="https://sqmagazine.co.uk/shadow-ai-usage-statistics/">sqmagazine.co.uk</a></p>
@@ -2358,45 +2593,27 @@
 <!-- FOOTER -->
 <!-- ============================================================ -->
 <div class="site-footer" id="siteFooter">
-  <span>WorkingPolicy.AI &nbsp;<span class="glyph">❋</span>&nbsp; Built by Elzanne Amao, 2025</span>
+  <span>WorkingPolicy.AI &nbsp;<span class="glyph">■</span>&nbsp; Built by Elzanne Amao, 2025</span>
   <span>A prototype · v.0.3</span>
 </div>
 
 <!-- ============================================================ -->
 <!-- TWEAKS PANEL -->
 <!-- ============================================================ -->
-<button class="tweaks-toggle" id="tweaksToggle" aria-label="Display options" title="Display options">+</button>
+<button class="tweaks-toggle" id="tweaksToggle" aria-label="Design tweaks" title="Design tweaks">+</button>
 <aside class="tweaks-panel" id="tweaksPanel">
   <button class="tw-close" onclick="toggleTweaks()" aria-label="Close">×</button>
-  <div class="panel-sub">— Display</div>
-  <div class="panel-title">Adjust the view.</div>
-  <p class="tw-sub">Selections persist while you browse.</p>
+  <div class="panel-sub">— Design</div>
+  <div class="panel-title">A menu of choices.</div>
+  <p class="tw-sub">Within the brand. Your selections persist while you browse.</p>
 
-  <h4>01 / Mode</h4>
-  <div class="tw-row" id="twTheme">
-    <button class="tw-chip active" data-theme="light">Paper</button>
-    <button class="tw-chip" data-theme="dark">Dark</button>
-  </div>
-
-  <h4>02 / Density</h4>
+  <h4>01 / Density</h4>
   <div class="tw-row" id="twDensity">
     <button class="tw-chip" data-density="cozy">Cozy</button>
     <button class="tw-chip active" data-density="comfortable">Comfortable</button>
     <button class="tw-chip" data-density="spacious">Spacious</button>
   </div>
 
-  <h4>03 / Landing layout</h4>
-  <div class="tw-row" id="twLanding">
-    <button class="tw-chip active" data-variant="cards">Cards</button>
-    <button class="tw-chip" data-variant="index">Index</button>
-    <button class="tw-chip" data-variant="manifesto">Manifesto</button>
-  </div>
-
-  <h4>04 / Notebook rules</h4>
-  <div class="tw-row" id="twRules">
-    <button class="tw-chip active" data-rules="off">Off</button>
-    <button class="tw-chip" data-rules="on">On</button>
-  </div>
 </aside>
 
 <!-- ============================================================ -->
@@ -2441,6 +2658,7 @@ function showScreen(screenId) {
   // Scroll to top
   window.scrollTo(0, 0);
   currentScreen = screenId;
+  if (typeof revealCheck === 'function') { revealCheck(); requestAnimationFrame(revealCheck); }
 }
 
 
@@ -2521,7 +2739,7 @@ function renderSetupPreview() {
   const preview = document.getElementById('setupPreviewButtons');
   preview.innerHTML = '';
   if (setupRoles.length === 0) {
-    preview.innerHTML = '<span style="font-size:14px;color:var(--text-tertiary);font-style:italic;">Add roles above to see the preview.</span>';
+    preview.innerHTML = '<span style="font-size:14px;color:var(--ink-mute);">Add roles above to see the preview.</span>';
     return;
   }
   setupRoles.forEach(role => {
@@ -3274,7 +3492,7 @@ function showSummary() {
 }
 
 function summaryCard(title, detail, extra, tagClass, tagLabel) {
-  return `<div class="summary-card"><span class="scnum">●</span><div><h3>${title}</h3><p>${detail}</p>${extra?`<p style="margin-top:8px; font-style:italic; color:var(--ink-mute);">${extra}</p>`:''}</div><span class="summary-tag ${tagClass}">${tagLabel}</span></div>`;
+  return `<div class="summary-card"><span class="scnum">●</span><div><h3>${title}</h3><p>${detail}</p>${extra?`<p style="margin-top:8px; color:var(--ink-mute);">${extra}</p>`:''}</div><span class="summary-tag ${tagClass}">${tagLabel}</span></div>`;
 }
 
 
@@ -3282,32 +3500,18 @@ function summaryCard(title, detail, extra, tagClass, tagLabel) {
 // TWEAKS PANEL
 // ============================================================
 
-const TWEAK_DEFAULTS = {
-  "theme": "light",
-  "density": "comfortable",
-  "landingVariant": "cards",
-  "rules": "off"
-};
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "density": "spacious"
+}/*EDITMODE-END*/;
 
 let tweaks = { ...TWEAK_DEFAULTS };
 
 function applyTweaks() {
   const html = document.documentElement;
-  if (tweaks.theme === 'light') html.removeAttribute('data-theme');
-  else html.setAttribute('data-theme', tweaks.theme);
   html.setAttribute('data-density', tweaks.density);
-  document.body.setAttribute('data-rules', tweaks.rules);
-
-  // Landing variant
-  document.querySelectorAll('.landing-variant').forEach(el => {
-    el.classList.toggle('hidden', el.dataset.variant !== tweaks.landingVariant);
-  });
 
   // Sync chip active states
-  syncChips('twTheme', 'theme', 'data-theme');
   syncChips('twDensity', 'density', 'data-density');
-  syncChips('twLanding', 'landingVariant', 'data-variant');
-  syncChips('twRules', 'rules', 'data-rules');
 }
 
 function syncChips(containerId, key, attr) {
@@ -3329,20 +3533,9 @@ function setTweak(key, value) {
 }
 
 function buildTweaksPanel() {
-  // Chip listeners
-  document.querySelectorAll('#twTheme .tw-chip').forEach(el =>
-    el.addEventListener('click', () => setTweak('theme', el.dataset.theme))
-  );
   document.querySelectorAll('#twDensity .tw-chip').forEach(el =>
     el.addEventListener('click', () => setTweak('density', el.dataset.density))
   );
-  document.querySelectorAll('#twLanding .tw-chip').forEach(el =>
-    el.addEventListener('click', () => setTweak('landingVariant', el.dataset.variant))
-  );
-  document.querySelectorAll('#twRules .tw-chip').forEach(el =>
-    el.addEventListener('click', () => setTweak('rules', el.dataset.rules))
-  );
-
   // Open / close
   document.getElementById('tweaksToggle').addEventListener('click', toggleTweaks);
 }
@@ -3358,7 +3551,26 @@ function toggleTweaks() {
 document.addEventListener('DOMContentLoaded', () => {
   buildTweaksPanel();
   applyTweaks();
+  initReveal();
 });
+
+// ============================================================
+// SCROLL-REVEAL (calm fade + rise, matches the brand)
+// ============================================================
+function revealCheck() {
+  const h = window.innerHeight || document.documentElement.clientHeight;
+  document.querySelectorAll('.reveal:not(.is-in), .reveal-soft:not(.is-in), .reveal-group:not(.is-in)').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.height > 0 && r.top < h * 0.92) el.classList.add('is-in');
+  });
+}
+function initReveal() {
+  revealCheck();
+  window.addEventListener('scroll', revealCheck, { passive: true });
+  window.addEventListener('resize', revealCheck, { passive: true });
+  setTimeout(revealCheck, 80);
+  setTimeout(revealCheck, 350);
+}
 
 // Host edit-mode protocol
 window.addEventListener('message', (e) => {

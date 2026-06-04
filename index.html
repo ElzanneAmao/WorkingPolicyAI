@@ -2062,6 +2062,62 @@
     #screen-about .principle { grid-template-columns: 1fr; gap: 6px; padding: 30px 0; }
     #screen-about .principle .pnum { font-size: 38px; }
   }
+
+  /* Demo CTA */
+  .demo-cta {
+    margin-top: 28px;
+    text-align: center;
+  }
+  .demo-cta button {
+    font-size: 13px;
+    color: var(--ink-mute);
+    letter-spacing: 0.01em;
+    padding: 6px 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: color 0.2s ease;
+  }
+  .demo-cta button:hover { color: var(--accent); }
+
+  /* Demo banner */
+  .demo-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 11px 40px;
+    background: var(--accent-wash);
+    border-bottom: 1px solid var(--accent);
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+  }
+  .demo-banner .db-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: var(--label-tracking);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .demo-banner .db-exit {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ink-mute);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--sans);
+    padding: 4px 0;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+  .demo-banner .db-exit:hover { color: var(--ink); }
+  @media (max-width: 640px) {
+    .demo-banner { padding: 11px 20px; }
+  }
 </style>
 </head>
 <body data-rules="off">
@@ -2130,6 +2186,10 @@
         <p>See the thinking behind the tool, and exactly how your answers are handled, before you decide anything.</p>
         <span class="go">Read more →</span>
       </a>
+    </div>
+
+    <div class="demo-cta">
+      <button onclick="loadDemo()">or see a completed example — explore with demo data →</button>
     </div>
 
     <p class="landing-note">This process works best for teams of seven or more. Smaller teams may find a facilitated conversation more effective than a structured interview.</p>
@@ -2294,6 +2354,11 @@
 <!-- SCREEN: DASHBOARD -->
 <!-- ============================================================ -->
 <div class="screen" id="screen-dashboard">
+  <div class="demo-banner hidden" id="demoBanner">
+    <span class="db-label">Demo</span>
+    <span>Showing 15 simulated responses from Coastal Agency — a fictional creative agency.</span>
+    <button class="db-exit" onclick="exitDemo()">← Exit demo</button>
+  </div>
   <div class="dashboard-wrap">
     <div class="page-label">Lead view · Round 01</div>
     <div class="dash-head reveal">
@@ -3572,6 +3637,121 @@ function initReveal() {
   setTimeout(revealCheck, 80);
   setTimeout(revealCheck, 350);
 }
+
+// ============================================================
+// DEMO MODE — synthetic team data for Coastal Agency
+// ============================================================
+
+const DEMO_DATA = {
+  team: { name: "Coastal Agency", size: 15, roles: 6 },
+  stats: { responses: 15, total: 15, roleGroups: 6, avgMins: 11 },
+  usage: [
+    { label: "ChatGPT",               n: 13, total: 15 },
+    { label: "Canva AI features",     n:  9, total: 15 },
+    { label: "Claude",                n:  7, total: 15 },
+    { label: "Midjourney / DALL·E",   n:  6, total: 15 },
+    { label: "Copilot",               n:  4, total: 15 },
+    { label: "Other / niche",         n:  5, total: 15 },
+  ],
+  exposure: [
+    { name: "Client briefs & emails",       n: 11, total: 15, tier: "red"   },
+    { name: "Campaign performance data",    n:  9, total: 15, tier: "red"   },
+    { name: "Brand assets / style guides",  n:  7, total: 15, tier: "amber" },
+    { name: "Budget figures",               n:  5, total: 15, tier: "amber" },
+    { name: "Login credentials",            n:  0, total: 15, tier: "green" },
+  ],
+  exposureQuote: { text: "I pasted the brief without thinking about it.", role: "Client Services" },
+  guidance: [
+    { label: "Clear guidance",            n: 2, total: 15, color: "var(--ok)"     },
+    { label: "Vague guidance",            n: 5, total: 15, color: "var(--warn)"   },
+    { label: "Encouraged, no limits",     n: 6, total: 15, color: "var(--warn)"   },
+    { label: "No one has said anything",  n: 2, total: 15, color: "var(--danger)" },
+  ],
+  guidanceQuote: { text: "We were told to use it, but nobody said how far.", role: "Creative & Design" },
+  concerns: [
+    { label: "Client data may be at risk",    n: 12, total: 15 },
+    { label: "No shared standards yet",       n: 11, total: 15 },
+    { label: "Quality slipping over time",    n:  7, total: 15 },
+    { label: "Some people being left behind", n:  6, total: 15 },
+  ]
+};
+
+let isDemoMode = false;
+
+function loadDemo() {
+  isDemoMode = true;
+  renderDashboard(DEMO_DATA);
+  showScreen('dashboard');
+}
+
+function exitDemo() {
+  isDemoMode = false;
+  document.getElementById('demoBanner').classList.add('hidden');
+  const pageLabel = document.querySelector('#screen-dashboard .page-label');
+  if (pageLabel) pageLabel.textContent = 'Lead view · Round 01';
+  showScreen('landing');
+}
+
+function renderDashboard(data) {
+  // Stats row
+  const statEls = document.querySelectorAll('#screen-dashboard .dash-stat .v');
+  if (statEls[0]) statEls[0].innerHTML = `${data.stats.responses}<em>/${data.stats.total}</em>`;
+  if (statEls[1]) statEls[1].textContent = String(data.stats.roleGroups).padStart(2, '0');
+  if (statEls[2]) statEls[2].innerHTML = `${data.stats.avgMins}<em>m</em>`;
+
+  // Page label
+  const pageLabel = document.querySelector('#screen-dashboard .page-label');
+  if (pageLabel && isDemoMode) pageLabel.textContent = `Demo · ${data.team.name} · ${data.team.size} people`;
+
+  // Demo banner
+  const banner = document.getElementById('demoBanner');
+  if (banner) banner.classList.toggle('hidden', !isDemoMode);
+
+  // Usage bars
+  const usagePanel = document.querySelector('#screen-dashboard .dash-panel:nth-child(1) .bars');
+  if (usagePanel) {
+    usagePanel.innerHTML = data.usage.map(item => {
+      const pct = Math.round((item.n / item.total) * 100);
+      return `<div class="bar-row"><span class="blabel">${item.label}</span><div class="btrack"><div class="bfill" style="width:${pct}%"></div></div><span class="bval">${item.n}/${item.total}</span></div>`;
+    }).join('');
+  }
+
+  // Data exposure tiers
+  const tierList = document.querySelector('#screen-dashboard .dash-panel:nth-child(2) .tier-list');
+  if (tierList) {
+    tierList.innerHTML = data.exposure.map(item =>
+      `<div class="tier"><span class="dot t-${item.tier}"></span><span class="tname">${item.name}</span><span class="tcount">${item.n}/${item.total}</span></div>`
+    ).join('');
+  }
+  const expQuote = document.querySelector('#screen-dashboard .dash-panel:nth-child(2) .pull-quote');
+  const expAttr  = document.querySelector('#screen-dashboard .dash-panel:nth-child(2) .pq-attr');
+  if (expQuote) expQuote.textContent = `"${data.exposureQuote.text}"`;
+  if (expAttr)  expAttr.textContent  = `— Anonymized · ${data.exposureQuote.role}`;
+
+  // Guidance bars
+  const guidancePanel = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .bars');
+  if (guidancePanel) {
+    guidancePanel.innerHTML = data.guidance.map(item => {
+      const pct = Math.round((item.n / item.total) * 100);
+      return `<div class="bar-row"><span class="blabel">${item.label}</span><div class="btrack"><div class="bfill" style="width:${pct}%; background:${item.color}"></div></div><span class="bval">${item.n}/${item.total}</span></div>`;
+    }).join('');
+  }
+  const guideQuote = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .pull-quote');
+  const guideAttr  = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .pq-attr');
+  if (guideQuote) guideQuote.textContent = `"${data.guidanceQuote.text}"`;
+  if (guideAttr)  guideAttr.textContent  = `— Anonymized · ${data.guidanceQuote.role}`;
+
+  // Concerns
+  const concernList = document.querySelector('#screen-dashboard .dash-panel:nth-child(4) .concern-list');
+  if (concernList) {
+    concernList.innerHTML = data.concerns.map(item => {
+      const pct = Math.round((item.n / item.total) * 100);
+      const color = item.n >= item.total * 0.7 ? 'var(--danger)' : 'var(--accent)';
+      return `<div class="concern-row"><span>${item.label}</span><span class="cdot"><span style="position:absolute;inset:0 auto 0 0;width:${pct}%;background:${color};"></span></span><span class="cv">${item.n}</span></div>`;
+    }).join('');
+  }
+}
+
 
 // Host edit-mode protocol
 window.addEventListener('message', (e) => {

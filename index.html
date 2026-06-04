@@ -6,36 +6,40 @@
 <title>WorkingPolicy.AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=Geist:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* Fonts loaded via <link> below; this block is the design system */
 
   :root {
-    /* Palette: Sage (default) */
-    --paper:        oklch(97.5% 0.008 95);
-    --paper-deep:   oklch(95% 0.012 90);
-    --ink:          oklch(22% 0.015 240);
-    --ink-soft:     oklch(38% 0.015 240);
-    --ink-mute:     oklch(56% 0.012 240);
-    --ink-faint:    oklch(72% 0.01 240);
-    --rule:         oklch(88% 0.012 240);
-    --rule-soft:    oklch(93% 0.008 240);
-    --accent:       oklch(48% 0.07 165);
-    --accent-soft:  oklch(60% 0.05 165);
-    --accent-wash:  oklch(94% 0.022 165);
-    --warn:         oklch(55% 0.09 65);
-    --warn-wash:    oklch(95% 0.025 75);
-    --danger:       oklch(52% 0.13 25);
-    --danger-wash:  oklch(95% 0.025 25);
-    --ok:           oklch(50% 0.08 155);
-    --ok-wash:      oklch(94% 0.03 155);
-    --info:         oklch(50% 0.07 245);
-    --info-wash:    oklch(94% 0.02 245);
+    /* Palette — Elzanne Amao brand base */
+    --paper:        #ffffff;
+    --paper-deep:   #f1f4f2;
+    --ink:          #2c3830;
+    --ink-soft:     #4a5c52;
+    --ink-mute:     #7a8c6e;
+    --ink-faint:    #a8b9a0;
+    --rule:         #dde2dd;
+    --rule-soft:    #edf0ed;
 
-    /* Typography */
-    --serif: "Newsreader", "Source Serif 4", Georgia, serif;
-    --sans: "Geist", "Söhne", system-ui, -apple-system, sans-serif;
-    --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+    /* WorkingPolicy accent — policy slate */
+    --accent:       #2d5c72;
+    --accent-soft:  #4a7d94;
+    --accent-wash:  #e6f0f5;
+
+    /* Status */
+    --warn:         #c47c30;
+    --warn-wash:    #faf3ea;
+    --danger:       #b03030;
+    --danger-wash:  #faebeb;
+    --ok:           #3a7a4a;
+    --ok-wash:      #eaf4ee;
+    --info:         #2d5c72;
+    --info-wash:    #e6f0f5;
+
+    /* Typography — Elzanne Amao brand fonts */
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans:  "DM Sans", system-ui, -apple-system, sans-serif;
+    --mono:  "IBM Plex Mono", ui-monospace, monospace;
 
     /* Density (Comfortable default) */
     --space-unit: 8px;
@@ -56,7 +60,7 @@
     --label-size: 11px;
     --label-tracking: 0.16em;
 
-    --radius: 4px;
+    --radius: 0px;
   }
 
   /* Density variants */
@@ -73,89 +77,19 @@
     --display-size: clamp(40px, 5.2vw, 68px);
   }
 
-  /* Palettes */
-  [data-palette="slate"] {
-    --paper: oklch(97% 0.005 240);
-    --paper-deep: oklch(94% 0.008 240);
-    --ink: oklch(20% 0.018 245);
-    --ink-soft: oklch(36% 0.015 245);
-    --ink-mute: oklch(54% 0.012 245);
-    --ink-faint: oklch(70% 0.01 245);
-    --rule: oklch(88% 0.01 240);
-    --rule-soft: oklch(93% 0.007 240);
-    --accent: oklch(48% 0.085 245);
-    --accent-soft: oklch(60% 0.06 245);
-    --accent-wash: oklch(94% 0.025 245);
-  }
-  [data-palette="oxblood"] {
-    --paper: oklch(96% 0.012 70);
-    --paper-deep: oklch(93% 0.018 65);
-    --ink: oklch(20% 0.02 25);
-    --ink-soft: oklch(36% 0.018 25);
-    --ink-mute: oklch(54% 0.014 25);
-    --ink-faint: oklch(72% 0.012 25);
-    --rule: oklch(86% 0.018 35);
-    --rule-soft: oklch(92% 0.014 40);
-    --accent: oklch(38% 0.11 20);
-    --accent-soft: oklch(52% 0.09 20);
-    --accent-wash: oklch(93% 0.028 30);
-  }
-  [data-palette="terracotta"] {
-    --paper: oklch(98% 0.008 75);
-    --paper-deep: oklch(95.5% 0.014 70);
-    --ink: oklch(25% 0.012 50);
-    --ink-soft: oklch(42% 0.012 50);
-    --ink-mute: oklch(58% 0.01 50);
-    --ink-faint: oklch(74% 0.008 50);
-    --rule: oklch(88% 0.014 60);
-    --rule-soft: oklch(93% 0.01 60);
-    --accent: oklch(58% 0.13 45);
-    --accent-soft: oklch(68% 0.1 45);
-    --accent-wash: oklch(95% 0.03 60);
-  }
-
   /* Dark mode */
   [data-theme="dark"] {
-    --paper: oklch(18% 0.015 240);
-    --paper-deep: oklch(22% 0.015 240);
-    --ink: oklch(95% 0.008 95);
-    --ink-soft: oklch(80% 0.012 95);
-    --ink-mute: oklch(64% 0.01 240);
-    --ink-faint: oklch(48% 0.01 240);
-    --rule: oklch(30% 0.018 240);
-    --rule-soft: oklch(25% 0.015 240);
-    --accent: oklch(72% 0.09 160);
-    --accent-soft: oklch(64% 0.07 160);
-    --accent-wash: oklch(28% 0.04 160);
-  }
-  [data-theme="dark"][data-palette="slate"] {
-    --accent: oklch(72% 0.1 245);
-    --accent-soft: oklch(64% 0.08 245);
-    --accent-wash: oklch(28% 0.04 245);
-  }
-  [data-theme="dark"][data-palette="oxblood"] {
-    --paper: oklch(18% 0.015 25);
-    --paper-deep: oklch(22% 0.018 25);
-    --accent: oklch(68% 0.12 25);
-    --accent-soft: oklch(58% 0.1 25);
-    --accent-wash: oklch(28% 0.06 25);
-  }
-  [data-theme="dark"][data-palette="terracotta"] {
-    --accent: oklch(72% 0.13 50);
-    --accent-soft: oklch(64% 0.1 50);
-    --accent-wash: oklch(28% 0.06 50);
-  }
-
-  /* Type pairing variants */
-  [data-type="plex"] {
-    --serif: "Source Serif 4", Georgia, serif;
-    --sans: "IBM Plex Sans", system-ui, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, monospace;
-  }
-  [data-type="allsans"] {
-    --serif: "Geist", "Söhne", system-ui, sans-serif;
-    --sans: "Geist", "Söhne", system-ui, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --paper:        #1c2220;
+    --paper-deep:   #232c28;
+    --ink:          #f1f4f2;
+    --ink-soft:     #c8d4cc;
+    --ink-mute:     #8da890;
+    --ink-faint:    #567060;
+    --rule:         #2e3c38;
+    --rule-soft:    #263028;
+    --accent:       #6aaccc;
+    --accent-soft:  #4a8aaa;
+    --accent-wash:  #1a3a4a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -216,7 +150,7 @@
     font-family: var(--serif);
     font-size: var(--display-size);
     line-height: var(--display-line);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: -0.025em;
     color: var(--ink);
     text-wrap: balance;
@@ -351,7 +285,7 @@
   .page-title {
     font-family: var(--serif);
     font-size: var(--h1-size);
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.12;
     color: var(--ink);
     margin-bottom: 24px;
@@ -475,7 +409,7 @@
     font-family: var(--serif);
     font-size: var(--display-size);
     line-height: var(--display-line);
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: -0.025em;
     margin-bottom: 32px;
     text-wrap: balance;
@@ -745,7 +679,7 @@
     color: var(--ink);
     background: var(--paper-deep);
     border: 1px solid var(--rule);
-    border-radius: 2px;
+    border-radius: 0;
     padding: 4px 8px;
     width: 52px;
     text-align: center;
@@ -847,7 +781,7 @@
     border: 1px solid var(--rule);
     background: var(--paper);
     color: var(--ink);
-    border-radius: 2px;
+    border-radius: 0;
     cursor: default;
   }
 
@@ -922,7 +856,7 @@
     background: var(--ink);
     color: var(--paper);
     padding: 12px 18px;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: 15px;
     line-height: 1.5;
     display: inline-block;
@@ -974,7 +908,7 @@
     cursor: pointer;
     transition: all 0.15s;
     line-height: 1.4;
-    border-radius: 2px;
+    border-radius: 0;
     text-align: left;
   }
   .picker-btn:hover {
@@ -1002,7 +936,7 @@
     background: var(--accent);
     color: white;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 0;
     display: none;
     margin-top: 12px;
     margin-left: 28px;
@@ -1027,7 +961,7 @@
     background: var(--paper);
     color: var(--ink);
     outline: none;
-    border-radius: 2px;
+    border-radius: 0;
   }
   .other-input:focus { border-color: var(--accent); }
   .other-input::placeholder { color: var(--ink-faint); }
@@ -1763,7 +1697,7 @@
     background: var(--paper);
     color: var(--ink);
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 0;
     transition: all 0.15s;
   }
   .tw-chip:hover { border-color: var(--ink); }
@@ -1852,8 +1786,8 @@
 <!-- ============================================================ -->
 <div class="topbar" id="topbar">
   <a class="topbar-logo" onclick="showScreen('landing')">
-    <span class="mark icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 3 H15 L19 7 V21 H5 Z"/><path d="M15 3 V7 H19"/><path d="M8 11 H16 M8 14 H16 M8 17 H13"/></svg></span>
-    <span class="name">Working<em>Policy</em>.AI</span>
+    <span class="mark icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="4" y="3" width="12" height="18" rx="0"/><path d="M16 3 L20 7 L20 21 L4 21"/><path d="M7 9 H13 M7 12 H15 M7 15 H15 M7 18 H11"/><rect x="13" y="3" width="3" height="4" fill="var(--accent)" stroke="none" opacity="0.6"/></svg></span>
+    <span class="name">Working<em>Policy</em><span style="font-family:var(--mono);font-size:0.6em;color:var(--ink-mute);letter-spacing:0.05em;vertical-align:super;margin-left:1px;">.AI</span></span>
   </a>
   <nav class="topbar-nav" id="topbarNav">
     <a onclick="showScreen('landing')" id="nav-landing">Home</a>
@@ -2431,44 +2365,34 @@
 <!-- ============================================================ -->
 <!-- TWEAKS PANEL -->
 <!-- ============================================================ -->
-<button class="tweaks-toggle" id="tweaksToggle" aria-label="Design tweaks" title="Design tweaks">+</button>
+<button class="tweaks-toggle" id="tweaksToggle" aria-label="Display options" title="Display options">+</button>
 <aside class="tweaks-panel" id="tweaksPanel">
   <button class="tw-close" onclick="toggleTweaks()" aria-label="Close">×</button>
-  <div class="panel-sub">— Design</div>
-  <div class="panel-title">A menu of choices.</div>
-  <p class="tw-sub">Live preview — try the variants below. Your selections persist while you browse.</p>
+  <div class="panel-sub">— Display</div>
+  <div class="panel-title">Adjust the view.</div>
+  <p class="tw-sub">Selections persist while you browse.</p>
 
-  <h4>01 / Palette</h4>
-  <div class="tw-swatches" id="twPalette"></div>
-
-  <h4>02 / Mode</h4>
+  <h4>01 / Mode</h4>
   <div class="tw-row" id="twTheme">
     <button class="tw-chip active" data-theme="light">Paper</button>
     <button class="tw-chip" data-theme="dark">Dark</button>
   </div>
 
-  <h4>03 / Density</h4>
+  <h4>02 / Density</h4>
   <div class="tw-row" id="twDensity">
     <button class="tw-chip" data-density="cozy">Cozy</button>
     <button class="tw-chip active" data-density="comfortable">Comfortable</button>
     <button class="tw-chip" data-density="spacious">Spacious</button>
   </div>
 
-  <h4>04 / Type</h4>
-  <div class="tw-row" id="twType">
-    <button class="tw-chip active" data-type="default">Newsreader + Geist</button>
-    <button class="tw-chip" data-type="plex">Source Serif + Plex</button>
-    <button class="tw-chip" data-type="allsans">All sans</button>
-  </div>
-
-  <h4>05 / Landing layout</h4>
+  <h4>03 / Landing layout</h4>
   <div class="tw-row" id="twLanding">
     <button class="tw-chip active" data-variant="cards">Cards</button>
     <button class="tw-chip" data-variant="index">Index</button>
     <button class="tw-chip" data-variant="manifesto">Manifesto</button>
   </div>
 
-  <h4>06 / Notebook rules</h4>
+  <h4>04 / Notebook rules</h4>
   <div class="tw-row" id="twRules">
     <button class="tw-chip active" data-rules="off">Off</button>
     <button class="tw-chip" data-rules="on">On</button>
@@ -3358,34 +3282,20 @@ function summaryCard(title, detail, extra, tagClass, tagLabel) {
 // TWEAKS PANEL
 // ============================================================
 
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "palette": "sage",
+const TWEAK_DEFAULTS = {
   "theme": "light",
-  "density": "spacious",
-  "type": "plex",
+  "density": "comfortable",
   "landingVariant": "cards",
   "rules": "off"
-}/*EDITMODE-END*/;
-
-const PALETTES = [
-  { id: 'sage',       a: 'oklch(97.5% 0.008 95)', b: 'oklch(48% 0.07 165)', label: 'Sage' },
-  { id: 'slate',      a: 'oklch(97% 0.005 240)',  b: 'oklch(48% 0.085 245)', label: 'Slate' },
-  { id: 'oxblood',    a: 'oklch(96% 0.012 70)',   b: 'oklch(38% 0.11 20)',  label: 'Oxblood' },
-  { id: 'terracotta', a: 'oklch(98% 0.008 75)',   b: 'oklch(58% 0.13 45)',  label: 'Terra' },
-];
+};
 
 let tweaks = { ...TWEAK_DEFAULTS };
 
 function applyTweaks() {
   const html = document.documentElement;
-  // palette: sage is default, others set data-palette
-  if (tweaks.palette === 'sage') html.removeAttribute('data-palette');
-  else html.setAttribute('data-palette', tweaks.palette);
   if (tweaks.theme === 'light') html.removeAttribute('data-theme');
   else html.setAttribute('data-theme', tweaks.theme);
   html.setAttribute('data-density', tweaks.density);
-  if (tweaks.type === 'default') html.removeAttribute('data-type');
-  else html.setAttribute('data-type', tweaks.type);
   document.body.setAttribute('data-rules', tweaks.rules);
 
   // Landing variant
@@ -3394,10 +3304,8 @@ function applyTweaks() {
   });
 
   // Sync chip active states
-  syncChips('twPalette', 'palette');
   syncChips('twTheme', 'theme', 'data-theme');
   syncChips('twDensity', 'density', 'data-density');
-  syncChips('twType', 'type', 'data-type');
   syncChips('twLanding', 'landingVariant', 'data-variant');
   syncChips('twRules', 'rules', 'data-rules');
 }
@@ -3421,27 +3329,12 @@ function setTweak(key, value) {
 }
 
 function buildTweaksPanel() {
-  // Palette swatches
-  const palWrap = document.getElementById('twPalette');
-  palWrap.innerHTML = PALETTES.map(p => `
-    <div class="tw-swatch" data-palette="${p.id}" title="${p.label}">
-      <span class="a" style="background:${p.a}"></span>
-      <span class="b" style="background:${p.b}"></span>
-      <span class="label">${p.label}</span>
-    </div>`).join('');
-  palWrap.querySelectorAll('.tw-swatch').forEach(el => {
-    el.addEventListener('click', () => setTweak('palette', el.dataset.palette));
-  });
-
   // Chip listeners
   document.querySelectorAll('#twTheme .tw-chip').forEach(el =>
     el.addEventListener('click', () => setTweak('theme', el.dataset.theme))
   );
   document.querySelectorAll('#twDensity .tw-chip').forEach(el =>
     el.addEventListener('click', () => setTweak('density', el.dataset.density))
-  );
-  document.querySelectorAll('#twType .tw-chip').forEach(el =>
-    el.addEventListener('click', () => setTweak('type', el.dataset.type))
   );
   document.querySelectorAll('#twLanding .tw-chip').forEach(el =>
     el.addEventListener('click', () => setTweak('landingVariant', el.dataset.variant))

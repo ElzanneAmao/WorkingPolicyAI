@@ -2480,11 +2480,11 @@
 
       <div class="info-box" style="margin-top:28px;">
         <div class="info-box-heading">Why three is the minimum</div>
-        <p>Each team member selects their group before starting the interview, and the dashboard shows results by group. With fewer than three people in a group, the lead could identify individual responses even in aggregate. The tool requires every group to have at least three people before interviews can launch.</p>
+        <p>Each team member selects their group before starting the interview, and the dashboard shows results by group. With fewer than three people in a group, the lead could identify individual responses even in aggregate. Groups smaller than three can still take part — but they won't get their own dashboard breakdown. Their responses count toward team-wide patterns only.</p>
       </div>
 
       <div id="setupWarning" class="warning-box hidden">
-        <div class="info-box-heading">Some groups are too small</div>
+        <div class="info-box-heading">A note on small groups</div>
         <p id="setupWarningText"></p>
       </div>
 
@@ -3060,14 +3060,13 @@ function checkSmallGroups() {
 
   if (small.length > 0) {
     const names = small.map(r => `"${r.name}" (${r.count})`).join(', ');
-    warnings.push(`${names} ${small.length === 1 ? 'has' : 'have'} fewer than 3 people. Combine ${small.length === 1 ? 'this group' : 'these groups'} with a related function so that each group has at least 3 people.`);
-    canContinue = false;
+    warnings.push(`${names} ${small.length === 1 ? 'has' : 'have'} fewer than 3 people. ${small.length === 1 ? 'This group' : 'These groups'} can still take part and will see their own role-specific questions, but won't get a separate dashboard breakdown — their responses count toward team-wide patterns only. If you'd rather see their patterns by role, merge them with a related group.`);
   }
 
   const noFocus = setupRoles.filter(r => !r.focus);
   if (noFocus.length > 0) {
     const names = noFocus.map(r => `"${r.name}"`).join(', ');
-    warnings.push(`${names} ${noFocus.length === 1 ? 'needs' : 'need'} a question focus — it decides which role-specific questions that group sees.`);
+    warnings.push(`${names} ${noFocus.length === 1 ? 'needs' : 'need'} a question focus — it decides which role-specific questions that group sees. The interview can't launch until this is set.`);
     canContinue = false;
   }
 
@@ -3077,7 +3076,7 @@ function checkSmallGroups() {
 
   // Show/hide warning
   if (warnings.length > 0) {
-    text.textContent = warnings.join(' ') + ' The interview can\'t launch until this is resolved.';
+    text.textContent = warnings.join(' ');
     warning.classList.remove('hidden');
   } else {
     warning.classList.add('hidden');

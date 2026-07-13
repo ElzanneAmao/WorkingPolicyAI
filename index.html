@@ -2178,6 +2178,43 @@
   }
   .invite-bar .ib-copy:hover { background: var(--accent); color: var(--paper); }
 
+  /* Group response tracker + waiting state (lead dashboard) */
+  .group-tracker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 26px 0 6px;
+  }
+  .group-tracker .gt-item {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    border: 1px solid var(--hairline);
+    background: var(--paper);
+    padding: 7px 14px;
+  }
+  .group-tracker .gt-item strong { color: var(--ink); font-weight: 500; margin-left: 4px; }
+  .group-tracker .gt-item.gt-done { border-color: var(--sage); background: var(--ok-wash); }
+  .group-tracker .gt-refresh {
+    cursor: pointer;
+    color: var(--accent);
+    border-color: var(--accent);
+    transition: background 0.2s, color 0.2s;
+  }
+  .group-tracker .gt-refresh:hover { background: var(--accent); color: var(--paper); }
+  .dash-waiting {
+    margin-top: 26px;
+    padding: 26px 30px;
+    border-left: 2px solid var(--accent);
+    background: var(--accent-wash);
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .dash-waiting strong { color: var(--ink); }
+  .dash-waiting a { color: var(--accent); }
+
   /* Demo CTA */
   .demo-cta {
     margin-top: 28px;
@@ -2545,7 +2582,7 @@
       <span class="ib-url" id="inviteUrl"></span>
       <button class="ib-copy" id="copyInviteBtn" onclick="copyInviteLink()">Copy link</button>
     </div>
-    <div class="page-label">Lead view · Round 01</div>
+    <div class="page-label" id="dashPageLabel">Lead view · Round 01</div>
     <div class="dash-head reveal">
       <div class="title-block">
         <h1 class="page-title" style="margin-bottom:14px;">What your team's interviews <em>revealed</em>.</h1>
@@ -2566,6 +2603,10 @@
         </div>
       </div>
     </div>
+
+    <div class="group-tracker hidden" id="groupTracker"></div>
+
+    <div class="dash-waiting hidden" id="dashWaiting"></div>
 
     <div class="dash-grid reveal-group">
       <!-- Usage panel -->
@@ -2904,6 +2945,11 @@ function showScreen(screenId) {
   if (screenId === 'interview' && !interviewInitialized) {
     initInterview();
     interviewInitialized = true;
+  }
+
+  // Lead dashboard pulls live data (demo mode renders its own)
+  if (screenId === 'dashboard' && !isDemoMode && typeof loadLeadDashboard === 'function') {
+    loadLeadDashboard();
   }
 
   // Scroll to top
@@ -4122,7 +4168,7 @@ function copyInviteLink() {
 
 const DEMO_DATA = {
   team: { name: "Coastal Agency", size: 15, roles: 6 },
-  stats: { responses: 15, total: 15, roleGroups: 6, avgMins: 11 },
+  stats: { responses: 15, total: 15, roleGroups: 6, thirdValue: "11<em>m</em>", thirdLabel: "Avg. interview" },
   usage: [
     { label: "ChatGPT",               n: 13, total: 15 },
     { label: "Canva AI features",     n:  9, total: 15 },
@@ -4138,14 +4184,14 @@ const DEMO_DATA = {
     { name: "Budget figures",               n:  5, total: 15, tier: "amber" },
     { name: "Login credentials",            n:  0, total: 15, tier: "green" },
   ],
-  exposureQuote: { text: "I pasted the brief without thinking about it.", role: "Client Services" },
+  exposureQuote: { text: "I pasted the brief without thinking about it.", attr: "Anonymized · Client Services" },
   guidance: [
     { label: "Clear guidance",            n: 2, total: 15, color: "var(--ok)"     },
     { label: "Vague guidance",            n: 5, total: 15, color: "var(--warn)"   },
     { label: "Encouraged, no limits",     n: 6, total: 15, color: "var(--warn)"   },
     { label: "No one has said anything",  n: 2, total: 15, color: "var(--danger)" },
   ],
-  guidanceQuote: { text: "We were told to use it, but nobody said how far.", role: "Creative & Design" },
+  guidanceQuote: { text: "We were told to use it, but nobody said how far.", attr: "Anonymized · Creative & Design" },
   concerns: [
     { label: "Client data may be at risk",    n: 12, total: 15 },
     { label: "No shared standards yet",       n: 11, total: 15 },
@@ -4158,6 +4204,10 @@ let isDemoMode = false;
 
 function loadDemo() {
   isDemoMode = true;
+  document.getElementById('groupTracker').classList.add('hidden');
+  document.getElementById('dashWaiting').classList.add('hidden');
+  document.querySelector('#screen-dashboard .dash-grid').style.display = '';
+  document.getElementById('inviteBar').classList.add('hidden');
   renderDashboard(DEMO_DATA);
   showScreen('dashboard');
 }
@@ -4165,20 +4215,40 @@ function loadDemo() {
 function exitDemo() {
   isDemoMode = false;
   document.getElementById('demoBanner').classList.add('hidden');
-  const pageLabel = document.querySelector('#screen-dashboard .page-label');
+  const pageLabel = document.getElementById('dashPageLabel');
   if (pageLabel) pageLabel.textContent = 'Lead view · Round 01';
   showScreen('landing');
 }
 
-function renderDashboard(data) {
-  // Stats row
+function setDashStats(stats) {
   const statEls = document.querySelectorAll('#screen-dashboard .dash-stat .v');
-  if (statEls[0]) statEls[0].innerHTML = `${data.stats.responses}<em>/${data.stats.total}</em>`;
-  if (statEls[1]) statEls[1].textContent = String(data.stats.roleGroups).padStart(2, '0');
-  if (statEls[2]) statEls[2].innerHTML = `${data.stats.avgMins}<em>m</em>`;
+  const labelEls = document.querySelectorAll('#screen-dashboard .dash-stat .l');
+  if (statEls[0]) statEls[0].innerHTML = `${stats.responses}<em>/${stats.total}</em>`;
+  if (statEls[1]) statEls[1].textContent = String(stats.roleGroups).padStart(2, '0');
+  if (statEls[2]) statEls[2].innerHTML = stats.thirdValue;
+  if (labelEls[2] && stats.thirdLabel) labelEls[2].textContent = stats.thirdLabel;
+}
+
+function setQuote(panelIdx, quote) {
+  const q = document.querySelector(`#screen-dashboard .dash-panel:nth-child(${panelIdx}) .pull-quote`);
+  const a = document.querySelector(`#screen-dashboard .dash-panel:nth-child(${panelIdx}) .pq-attr`);
+  if (!q) return;
+  if (quote) {
+    q.style.display = '';
+    if (a) a.style.display = '';
+    q.textContent = `"${quote.text}"`;
+    if (a) a.textContent = `— ${quote.attr}`;
+  } else {
+    q.style.display = 'none';
+    if (a) a.style.display = 'none';
+  }
+}
+
+function renderDashboard(data) {
+  setDashStats(data.stats);
 
   // Page label
-  const pageLabel = document.querySelector('#screen-dashboard .page-label');
+  const pageLabel = document.getElementById('dashPageLabel');
   if (pageLabel && isDemoMode) pageLabel.textContent = `Demo · ${data.team.name} · ${data.team.size} people`;
 
   // Demo banner
@@ -4201,10 +4271,7 @@ function renderDashboard(data) {
       `<div class="tier"><span class="dot t-${item.tier}"></span><span class="tname">${item.name}</span><span class="tcount">${item.n}/${item.total}</span></div>`
     ).join('');
   }
-  const expQuote = document.querySelector('#screen-dashboard .dash-panel:nth-child(2) .pull-quote');
-  const expAttr  = document.querySelector('#screen-dashboard .dash-panel:nth-child(2) .pq-attr');
-  if (expQuote) expQuote.textContent = `"${data.exposureQuote.text}"`;
-  if (expAttr)  expAttr.textContent  = `— Anonymized · ${data.exposureQuote.role}`;
+  setQuote(2, data.exposureQuote);
 
   // Guidance bars
   const guidancePanel = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .bars');
@@ -4214,10 +4281,7 @@ function renderDashboard(data) {
       return `<div class="bar-row"><span class="blabel">${item.label}</span><div class="btrack"><div class="bfill" style="width:${pct}%; background:${item.color}"></div></div><span class="bval">${item.n}/${item.total}</span></div>`;
     }).join('');
   }
-  const guideQuote = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .pull-quote');
-  const guideAttr  = document.querySelector('#screen-dashboard .dash-panel:nth-child(3) .pq-attr');
-  if (guideQuote) guideQuote.textContent = `"${data.guidanceQuote.text}"`;
-  if (guideAttr)  guideAttr.textContent  = `— Anonymized · ${data.guidanceQuote.role}`;
+  setQuote(3, data.guidanceQuote);
 
   // Concerns
   const concernList = document.querySelector('#screen-dashboard .dash-panel:nth-child(4) .concern-list');
@@ -4228,6 +4292,194 @@ function renderDashboard(data) {
       return `<div class="concern-row"><span>${item.label}</span><span class="cdot"><span style="position:absolute;inset:0 auto 0 0;width:${pct}%;background:${color};"></span></span><span class="cv">${item.n}</span></div>`;
     }).join('');
   }
+}
+
+
+// ============================================================
+// LEAD DASHBOARD — real responses from Supabase
+// ============================================================
+
+// Shorten long option labels for the usage bars
+const TOOL_LABELS = {
+  "Image generation (Midjourney, DALL·E, Firefly)": "Midjourney / DALL·E",
+  "AI features in other software (Canva, Grammarly, etc.)": "Canva, Grammarly, etc."
+};
+
+// Map client-data types to display name + risk tier
+const DATA_TIER_MAP = {
+  "Client emails or messages":                                        ["Client emails & messages", "red"],
+  "Campaign performance data (results, conversion rates, spend)":     ["Campaign performance data", "red"],
+  "Budgets or financial information":                                 ["Budget figures", "red"],
+  "Login credentials or account access details":                      ["Login credentials", "red"],
+  "Student testimonials, reviews, or outcome data":                   ["Student / outcome data", "red"],
+  "Proprietary coursework or program content":                        ["Proprietary course content", "amber"],
+  "Assets not yet released to the public (drafts, unreleased campaigns)": ["Unreleased assets", "amber"],
+  "Brand assets or style guides":                                     ["Brand assets / style guides", "amber"],
+  "Onboarding survey responses or personas":                          ["Onboarding data / personas", "amber"],
+  "Competitive intelligence or market research":                      ["Competitive intelligence", "amber"]
+};
+
+const GUIDANCE_BUCKETS = [
+  ["Yes, and it was clear",                                       "Clear guidance",           "var(--ok)"],
+  ["Yes, but it was vague",                                       "Vague guidance",           "var(--warn)"],
+  ["We've been encouraged to use it, but no limits were set",     "Encouraged, no limits",    "var(--warn)"],
+  ["No one has said anything",                                    "No one has said anything", "var(--danger)"],
+  ["I've been unsure and haven't asked",                          "Unsure, hasn't asked",     "var(--danger)"]
+];
+
+const CONCERN_LABELS = {
+  "We might be putting client data at risk":            "Client data may be at risk",
+  "Quality might be slipping because of over-reliance": "Quality slipping over time",
+  "Some people are getting left behind":                "Some people being left behind",
+  "We don't have shared standards":                     "No shared standards yet",
+  "Something else I'd rather explain in person":        "Something else (in person)"
+};
+
+// Follow-up questions whose most common answer makes an honest pull-quote
+const EXPOSURE_QUOTE_IDS = ["u_data_client_f2", "u_data_client_f3"];
+const GUIDANCE_QUOTE_IDS = ["u_guidance_clarity_f1", "u_guidance_clarity_f2", "u_guidance_clarity_f3"];
+
+function mostCommon(values) {
+  const counts = {};
+  values.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  return sorted.length ? sorted[0][0] : null;
+}
+
+function aggregateResponses(rows, roles, team) {
+  const n = rows.length;
+  const ans = rows.map(r => r.answers || {});
+
+  // Usage — count every tool mentioned
+  const toolCounts = {};
+  ans.forEach(a => (a.u_tools_which || []).forEach(t => {
+    if (t === "None") return;
+    const label = TOOL_LABELS[t] || t;
+    toolCounts[label] = (toolCounts[label] || 0) + 1;
+  }));
+  const usage = Object.entries(toolCounts)
+    .sort((a, b) => b[1] - a[1]).slice(0, 6)
+    .map(([label, c]) => ({ label, n: c, total: n }));
+  if (usage.length === 0) usage.push({ label: "No tools reported yet", n: 0, total: n });
+
+  // Data exposure — headline row + reported types
+  const anyData = ans.filter(a => ["Yes, regularly", "Yes, a few times"].includes(a.u_data_client)).length;
+  const typeCounts = {};
+  ans.forEach(a => (a.u_data_client_f1 || []).forEach(t => {
+    typeCounts[t] = (typeCounts[t] || 0) + 1;
+  }));
+  const exposure = [{
+    name: "Any client data in AI tools",
+    n: anyData, total: n,
+    tier: anyData >= n * 0.5 ? "red" : anyData > 0 ? "amber" : "green"
+  }];
+  Object.entries(typeCounts).sort((a, b) => b[1] - a[1]).slice(0, 4).forEach(([t, c]) => {
+    const m = DATA_TIER_MAP[t] || [t, "amber"];
+    exposure.push({ name: m[0], n: c, total: n, tier: m[1] });
+  });
+
+  // Guidance — all five buckets, even at zero
+  const guidance = GUIDANCE_BUCKETS.map(([opt, label, color]) => ({
+    label, color, total: n,
+    n: ans.filter(a => a.u_guidance_clarity === opt).length
+  }));
+
+  // Concerns — only those actually raised
+  const concernCounts = {};
+  ans.forEach(a => (a.u_outlook_concern || []).forEach(c => {
+    if (!CONCERN_LABELS[c]) return;
+    concernCounts[c] = (concernCounts[c] || 0) + 1;
+  }));
+  const concerns = Object.entries(concernCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([c, count]) => ({ label: CONCERN_LABELS[c], n: count, total: n }));
+  if (concerns.length === 0) concerns.push({ label: "No concerns reported yet", n: 0, total: n });
+
+  // Pull quotes — most common follow-up answers, honestly attributed
+  const expAnswers = ans.flatMap(a => EXPOSURE_QUOTE_IDS.map(id => a[id]).filter(v => typeof v === "string"));
+  const guideAnswers = ans.flatMap(a => GUIDANCE_QUOTE_IDS.map(id => a[id]).filter(v => typeof v === "string"));
+  const expTop = mostCommon(expAnswers);
+  const guideTop = mostCommon(guideAnswers);
+
+  // Average answered questions
+  const avgAnswered = n > 0 ? Math.round(ans.reduce((s, a) => s + Object.keys(a).length, 0) / n) : 0;
+
+  return {
+    team: { name: team.name, size: team.size },
+    stats: {
+      responses: n, total: team.size, roleGroups: roles.length,
+      thirdValue: String(avgAnswered), thirdLabel: "Avg. answers given"
+    },
+    usage, exposure, guidance, concerns,
+    exposureQuote: expTop ? { text: expTop, attr: "Most common follow-up answer" } : null,
+    guidanceQuote: guideTop ? { text: guideTop, attr: "Most common follow-up answer" } : null
+  };
+}
+
+function renderGroupTracker(roles, rows) {
+  const el = document.getElementById('groupTracker');
+  const counts = {};
+  rows.forEach(r => { counts[r.role_id] = (counts[r.role_id] || 0) + 1; });
+  el.innerHTML = roles.map(ro => {
+    const c = counts[ro.id] || 0;
+    const done = c >= ro.expected_count;
+    return `<span class="gt-item ${done ? 'gt-done' : ''}">${ro.name} <strong>${c}/${ro.expected_count}</strong></span>`;
+  }).join('') + `<button class="gt-item gt-refresh" onclick="loadLeadDashboard()">Refresh ↻</button>`;
+  el.classList.remove('hidden');
+}
+
+async function loadLeadDashboard() {
+  if (!currentUser || isDemoMode) return;
+
+  const waiting = document.getElementById('dashWaiting');
+  const grid = document.querySelector('#screen-dashboard .dash-grid');
+  const tracker = document.getElementById('groupTracker');
+  const pageLabel = document.getElementById('dashPageLabel');
+
+  // Resolve the lead's team — most recent if not already in memory
+  let team = currentTeam;
+  if (!team) {
+    const { data } = await _supa.from('teams').select('*')
+      .eq('lead_id', currentUser.id)
+      .order('created_at', { ascending: false }).limit(1);
+    team = data && data[0];
+  }
+
+  if (!team) {
+    waiting.innerHTML = `You haven't set up a team yet. <a onclick="showScreen('setup')" style="cursor:pointer; text-decoration:underline;">Create your team</a> to get an invite link for your members.`;
+    waiting.classList.remove('hidden');
+    grid.style.display = 'none';
+    tracker.classList.add('hidden');
+    return;
+  }
+
+  currentTeam = team;
+  updateInviteBar();
+  if (pageLabel) pageLabel.textContent = `Lead view · ${team.name}`;
+
+  const [rolesRes, rowsRes] = await Promise.all([
+    _supa.from('roles').select('*').eq('team_id', team.id),
+    _supa.from('responses').select('*').eq('team_id', team.id)
+  ]);
+  const roles = rolesRes.data || [];
+  const rows = rowsRes.data || [];
+
+  renderGroupTracker(roles, rows);
+
+  if (rows.length < 3) {
+    setDashStats({
+      responses: rows.length, total: team.size, roleGroups: roles.length,
+      thirdValue: '—', thirdLabel: 'Avg. answers given'
+    });
+    waiting.innerHTML = `<strong>${rows.length} of ${team.size} responses so far.</strong> The dashboard opens once at least three people have responded — before that, patterns could identify individuals. Share the invite link above and check back.`;
+    waiting.classList.remove('hidden');
+    grid.style.display = 'none';
+    return;
+  }
+
+  waiting.classList.add('hidden');
+  grid.style.display = '';
+  renderDashboard(aggregateResponses(rows, roles, team));
 }
 
 

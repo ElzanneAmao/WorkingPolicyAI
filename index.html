@@ -771,6 +771,20 @@
     transition: color 0.15s;
   }
   .role-remove:hover { color: var(--danger); }
+  .role-focus-select {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 5px 8px;
+    outline: none;
+    cursor: pointer;
+    max-width: 190px;
+  }
+  .role-focus-select:focus { border-color: var(--accent); }
+  .role-focus-select.unset { color: var(--warn); border-color: var(--warn); }
   .add-role-row {
     display: flex;
     gap: 16px;
@@ -2432,7 +2446,7 @@
       <p class="page-subtitle">The interview adapts its questions based on what each person does. A creative designer and a media buyer use AI in different ways and handle different kinds of data, so they'll see different follow-up questions.</p>
 
       <div class="section-heading">Roles</div>
-      <p class="section-desc">Group your team by function rather than individual job title. Each group needs at least three people so that individual responses can't be identified in the dashboard. For example, rather than listing Writer, Editor, and Copywriter separately, group them as "Content team, 5 people." The grouping should reflect how people's work overlaps — roles that handle similar data and tools belong together.</p>
+      <p class="section-desc">Group your team by function rather than individual job title. Each group needs at least three people so that individual responses can't be identified in the dashboard. For example, rather than listing Writer, Editor, and Copywriter separately, group them as "Content team, 5 people." The grouping should reflect how people's work overlaps — roles that handle similar data and tools belong together. Each group also gets a <em>question focus</em> — this decides which set of role-specific questions that group sees in the interview.</p>
 
       <div class="role-list" id="setupRoleList"></div>
 
@@ -2444,6 +2458,18 @@
         <div style="width:130px;">
           <label class="form-label">No. of people</label>
           <input type="number" id="setupNewRoleCount" class="add-role-input" placeholder="3" min="1" onkeydown="if(event.key==='Enter')addSetupRole()">
+        </div>
+        <div style="width:200px;">
+          <label class="form-label">Question focus</label>
+          <select id="setupNewRoleFocus" class="add-role-input" style="cursor:pointer;">
+            <option value="" selected>Choose…</option>
+            <option>Client Management</option>
+            <option>Media Buying</option>
+            <option>Creative</option>
+            <option>Development</option>
+            <option>Operations</option>
+            <option>Leadership</option>
+          </select>
         </div>
         <button class="btn-secondary" onclick="addSetupRole()">Add group</button>
       </div>
@@ -2891,8 +2917,24 @@ function showScreen(screenId) {
 // SETUP SCREEN (INTERACTIVE)
 // ============================================================
 
-// Each entry: { name: string, count: number }
+// Each entry: { name: string, count: number, focus: string }
 let setupRoles = [];
+
+const FOCUS_SETS = ["Client Management", "Media Buying", "Creative", "Development", "Operations", "Leadership"];
+
+function focusSelectHTML(selected, index) {
+  const opts = FOCUS_SETS.map(f =>
+    `<option value="${f}" ${f === selected ? 'selected' : ''}>${f}</option>`
+  ).join('');
+  return `<select class="role-focus-select ${selected ? '' : 'unset'}" onchange="updateRoleFocus(${index}, this.value)">
+    <option value="" ${selected ? '' : 'selected'} disabled>Question focus…</option>${opts}
+  </select>`;
+}
+
+function updateRoleFocus(index, value) {
+  setupRoles[index].focus = value;
+  renderSetupRoles();
+}
 
 function goToSetupStep1() {
   document.getElementById('setupStep1').classList.remove('hidden');
@@ -2916,6 +2958,7 @@ function renderSetupRoles() {
     item.innerHTML = `
       <input type="text" class="role-name-input" value="${role.name}" onchange="updateRoleName(${i}, this.value)" onblur="updateRoleName(${i}, this.value)">
       <div class="role-right">
+        ${focusSelectHTML(role.focus, i)}
         <input type="number" class="role-count-input" value="${role.count}" min="1" onchange="updateRoleCount(${i}, this.value)" onblur="updateRoleCount(${i}, this.value)">
         <button class="role-remove" onclick="removeSetupRole(${i})">&times;</button>
       </div>`;
@@ -2944,13 +2987,16 @@ function updateRoleCount(index, value) {
 function addSetupRole() {
   const nameInput = document.getElementById('setupNewRoleInput');
   const countInput = document.getElementById('setupNewRoleCount');
+  const focusInput = document.getElementById('setupNewRoleFocus');
   const name = nameInput.value.trim();
   const count = parseInt(countInput.value) || 1;
+  const focus = focusInput.value;
   if (!name) return;
   if (setupRoles.some(r => r.name === name)) { nameInput.value = ''; countInput.value = ''; return; }
-  setupRoles.push({ name, count });
+  setupRoles.push({ name, count, focus });
   nameInput.value = '';
   countInput.value = '';
+  focusInput.value = '';
   nameInput.focus();
   renderSetupRoles();
 }
@@ -3015,6 +3061,13 @@ function checkSmallGroups() {
   if (small.length > 0) {
     const names = small.map(r => `"${r.name}" (${r.count})`).join(', ');
     warnings.push(`${names} ${small.length === 1 ? 'has' : 'have'} fewer than 3 people. Combine ${small.length === 1 ? 'this group' : 'these groups'} with a related function so that each group has at least 3 people.`);
+    canContinue = false;
+  }
+
+  const noFocus = setupRoles.filter(r => !r.focus);
+  if (noFocus.length > 0) {
+    const names = noFocus.map(r => `"${r.name}"`).join(', ');
+    warnings.push(`${names} ${noFocus.length === 1 ? 'needs' : 'need'} a question focus — it decides which role-specific questions that group sees.`);
     canContinue = false;
   }
 
@@ -3290,7 +3343,8 @@ const NONE_LABELS = ["None", "I haven't started", "I don't use AI for media buyi
 function initInterview() {
   const grid = document.getElementById('roleGrid');
   grid.innerHTML = '';
-  ROLES.forEach(role => {
+  const roleNames = inviteRoles.length > 0 ? inviteRoles.map(r => r.name) : ROLES;
+  roleNames.forEach(role => {
     const card = document.createElement('div');
     card.className = 'role-card';
     card.textContent = role;
@@ -3303,6 +3357,7 @@ function initInterview() {
 function selectRole(role, card) {
   if (selectedRole) return;
   selectedRole = role;
+  selectedRoleObj = inviteRoles.find(r => r.name === role) || null;
 
   document.querySelectorAll('.role-card').forEach(c => {
     if (c === card) c.classList.add('selected');
@@ -3324,7 +3379,9 @@ function selectRole(role, card) {
 
 function buildQuestionQueue(role) {
   const universal = [...UNIVERSAL_QUESTIONS];
-  const roleSpecific = ROLE_QUESTIONS[role] || [];
+  // Custom role groups carry a question_focus that maps to one of the six banks
+  const focusKey = (selectedRoleObj && selectedRoleObj.question_focus) || role;
+  const roleSpecific = ROLE_QUESTIONS[focusKey] || [];
   const themeOrder = ["tools", "guidance", "data", "workflow", "quality", "outlook"];
   const allQuestions = [...universal, ...roleSpecific];
 
@@ -3709,11 +3766,38 @@ function showSummary() {
     // Next steps
     content.innerHTML += `<div class="summary-closing">
       <span class="sc-label">A note on what happens next</span>
-      <p>Your responses have been recorded. They'll be combined with your colleagues' responses and presented to your team lead as aggregate patterns. Your individual answers will not be shared. The team will use these patterns to build a shared working agreement about AI use.</p>
+      <p id="summarySaveNote">Saving your responses…</p>
     </div>`;
+
+    submitResponses();
 
     container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   }, 800);
+}
+
+async function submitResponses() {
+  const note = document.getElementById('summarySaveNote');
+  const savedMsg = "Your responses have been recorded. They'll be combined with your colleagues' responses and presented to your team lead as aggregate patterns. Your individual answers will not be shared. The team will use these patterns to build a shared working agreement about AI use.";
+
+  // No invite context (direct visit or demo) — nothing to save, keep it honest
+  if (!inviteTeam || !selectedRoleObj) {
+    if (note) note.textContent = "You're viewing the interview outside a team invite, so nothing was saved. In a real round, your responses would be combined with your colleagues' and shown to your team lead in aggregate only.";
+    return;
+  }
+
+  const { error } = await _supa.from('responses').insert({
+    team_id: inviteTeam.id,
+    role_id: selectedRoleObj.id,
+    answers: answers
+  });
+
+  if (note) {
+    if (error) {
+      note.innerHTML = `Your responses could not be saved (${error.message}). Please check your connection and <a href="#" onclick="event.preventDefault(); submitResponses();">try again</a>.`;
+    } else {
+      note.textContent = savedMsg;
+    }
+  }
 }
 
 function summaryCard(title, detail, extra, tagClass, tagLabel) {
@@ -3778,6 +3862,7 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTweaks();
   initReveal();
   initAuth();
+  initInvite();
 });
 
 // ============================================================
@@ -3907,6 +3992,47 @@ async function handleSignOut() {
 
 
 // ============================================================
+// INVITE CONTEXT — team member arriving via ?team=CODE
+// ============================================================
+
+let inviteTeam = null;   // team row fetched from the invite code
+let inviteRoles = [];    // that team's role groups
+let selectedRoleObj = null; // the role row the member picked
+
+async function initInvite() {
+  const code = new URLSearchParams(location.search).get('team');
+  if (!code) return;
+
+  const { data: team, error } = await _supa
+    .from('teams').select('*').eq('code', code).single();
+
+  if (error || !team) {
+    const lede = document.getElementById('landingLede');
+    if (lede) lede.textContent = 'This invite link doesn’t match any team. Check with the person who sent it — the link may be incomplete.';
+    return;
+  }
+
+  const { data: roles } = await _supa
+    .from('roles').select('*').eq('team_id', team.id);
+
+  inviteTeam = team;
+  inviteRoles = roles || [];
+  personalizeLanding();
+
+  // If the role picker was already rendered with fallback roles
+  // (slow connection) and nothing's been chosen yet, re-render it
+  if (interviewInitialized && !selectedRole) initInterview();
+}
+
+function personalizeLanding() {
+  const label = document.querySelector('#screen-landing .page-label');
+  const lede  = document.getElementById('landingLede');
+  if (label) label.textContent = `Welcome · ${inviteTeam.name}`;
+  if (lede) lede.textContent = `Your team lead at ${inviteTeam.name} has invited you to take part. Your team has probably been using AI for a while now — quietly, and in its own way. This is a calm, structured way to find out what’s really happening. About fifteen minutes, fully anonymous.`;
+}
+
+
+// ============================================================
 // TEAM CREATION & INVITE LINK
 // ============================================================
 
@@ -3940,7 +4066,8 @@ async function saveTeamAndContinue() {
   const roleRows = setupRoles.map(r => ({
     team_id: team.id,
     name: r.name,
-    expected_count: r.count
+    expected_count: r.count,
+    question_focus: r.focus
   }));
 
   const { error: rolesError } = await _supa.from('roles').insert(roleRows);
